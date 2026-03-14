@@ -1,0 +1,1649 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>הרפתקת הלמד</title>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{--bl:#1565C0;--bll:#42A5F5;--bld:#0D2A6E;--gd:#FFD700;--gdd:#F9A825;--gn:#43A047;--rd:#E53935;--bg:#060e24}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Rubik',sans-serif;background:var(--bg);min-height:100vh;color:#fff;overflow-x:hidden;direction:rtl}
+.bg-layer{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.bg-g{position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 20% 60%,#1565C030 0%,transparent 60%),radial-gradient(ellipse 50% 50% at 80% 20%,#42A5F520 0%,transparent 60%),radial-gradient(ellipse 40% 40% at 60% 90%,#FFD70010 0%,transparent 60%);animation:bgP 10s ease-in-out infinite alternate}
+@keyframes bgP{from{opacity:.7}to{opacity:1}}
+.star-f{position:absolute;inset:0}
+.sd{position:absolute;border-radius:50%;background:#fff;animation:twk var(--d,3s) ease-in-out infinite alternate;opacity:var(--o,.3)}
+@keyframes twk{from{opacity:.1}to{opacity:.8}}
+.sl{position:absolute;height:2px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.12),transparent);animation:rush linear infinite;border-radius:2px}
+@keyframes rush{from{transform:translateX(110vw)}to{transform:translateX(-110vw)}}
+.app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 20px 130px}
+.screen{display:none;width:100%;max-width:700px}
+.screen.active{display:flex;flex-direction:column;align-items:center;animation:sIn .4s cubic-bezier(.34,1.56,.64,1)}
+@keyframes sIn{from{opacity:0;transform:translateY(40px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.char-wrap{position:fixed;bottom:14px;right:16px;z-index:20;display:flex;align-items:flex-end;gap:10px}
+.char-img{width:90px;height:110px;object-fit:contain;object-position:bottom;animation:cIdle 2.2s ease-in-out infinite;cursor:pointer;filter:drop-shadow(0 6px 18px rgba(21,101,192,.5))}
+.char-img.happy{animation:cHappy .45s ease-in-out 3 forwards}
+.char-img.oops{animation:cOops .35s ease-in-out 3 forwards}
+.char-emoji{width:90px;height:110px;font-size:64px;display:none;align-items:center;justify-content:center;animation:cIdle 2.2s ease-in-out infinite;cursor:pointer}
+.char-emoji.happy{animation:cHappy .45s ease-in-out 3 forwards}
+.char-emoji.oops{animation:cOops .35s ease-in-out 3 forwards}
+@keyframes cIdle{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes cHappy{0%{transform:translateY(0) rotate(0)}30%{transform:translateY(-22px) rotate(-12deg)}70%{transform:translateY(-22px) rotate(12deg)}100%{transform:translateY(0) rotate(0)}}
+@keyframes cOops{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px) rotate(-5deg)}75%{transform:translateX(7px) rotate(5deg)}}
+.bubble{background:#fff;color:#0D2A6E;padding:12px 16px;border-radius:18px 18px 4px 18px;font-size:14px;font-weight:700;max-width:200px;line-height:1.55;box-shadow:0 6px 24px rgba(0,0,0,.4);opacity:0;transform:scale(.85) translateY(8px);transition:opacity .3s,transform .3s;pointer-events:none}
+.bubble.show{opacity:1;transform:scale(1) translateY(0)}
+.card{background:rgba(255,255,255,.07);backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.14);border-radius:26px;padding:28px;width:100%}
+.h1{font-size:46px;font-weight:900;text-align:center;color:var(--gd);text-shadow:0 4px 20px rgba(255,215,0,.5);line-height:1.15}
+.h2{font-size:28px;font-weight:800;text-align:center;margin-bottom:6px}
+.sub{font-size:18px;text-align:center;color:rgba(255,255,255,.75);margin-bottom:24px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:15px 28px;border:none;border-radius:18px;font-family:'Rubik',sans-serif;font-size:19px;font-weight:700;cursor:pointer;transition:transform .15s,box-shadow .15s;min-height:58px}
+.btn:active{transform:scale(.94)!important}
+.btn-gd{background:var(--gd);color:var(--bld);box-shadow:0 6px 0 var(--gdd),0 10px 28px rgba(255,215,0,.35)}
+.btn-gd:hover{transform:translateY(-3px);box-shadow:0 9px 0 var(--gdd),0 14px 32px rgba(255,215,0,.45)}
+.btn-bl{background:var(--bll);color:#fff;box-shadow:0 6px 0 #1565C0,0 10px 28px rgba(66,165,245,.35)}
+.btn-bl:hover{transform:translateY(-3px);box-shadow:0 9px 0 #1565C0,0 14px 32px rgba(66,165,245,.45)}
+.btn-gh{background:rgba(255,255,255,.1);color:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.2);font-size:16px;padding:10px 20px;min-height:unset;backdrop-filter:blur(8px);box-shadow:none}
+.btn-gh:hover{background:rgba(255,255,255,.18)}
+.name-input{background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.3);border-radius:16px;padding:16px 20px;font-family:'Rubik',sans-serif;font-size:26px;font-weight:700;color:#fff;text-align:center;width:100%;max-width:300px;outline:none;direction:rtl}
+.name-input:focus{border-color:var(--gd);background:rgba(255,255,255,.18)}
+.name-input::placeholder{color:rgba(255,255,255,.4)}
+.gender-row{display:flex;gap:14px;justify-content:center;margin:16px 0}
+.gen-btn{background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.25);border-radius:18px;padding:18px 28px;color:#fff;font-family:'Rubik',sans-serif;font-size:20px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:6px}
+.gen-btn:hover,.gen-btn.sel{background:rgba(255,215,0,.15);border-color:var(--gd);box-shadow:0 4px 16px rgba(255,215,0,.25)}
+.gen-btn span{font-size:36px}
+.char-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;width:100%}
+.char-card{background:rgba(255,255,255,.07);border:2px solid rgba(255,255,255,.18);border-radius:18px;padding:10px 6px;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:4px}
+.char-card:hover,.char-card.sel{background:rgba(255,215,0,.15);border-color:var(--gd);transform:translateY(-4px)}
+.char-card img{width:76px;height:90px;object-fit:contain;object-position:bottom}
+.char-fallback{font-size:50px;width:76px;height:90px;display:none;align-items:center;justify-content:center}
+.cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%}
+.cat-btn{background:rgba(255,255,255,.07);border:2px solid rgba(255,255,255,.18);border-radius:22px;padding:24px 14px;color:#fff;font-family:'Rubik',sans-serif;font-size:18px;font-weight:700;cursor:pointer;transition:all .22s;display:flex;flex-direction:column;align-items:center;gap:8px;backdrop-filter:blur(10px)}
+.cat-btn .ico{font-size:34px}
+.cat-btn .sm{font-size:12px;font-weight:400;opacity:.65}
+.cat-btn:hover{background:rgba(255,255,255,.14);border-color:var(--gd);transform:translateY(-5px);box-shadow:0 10px 28px rgba(255,215,0,.2)}
+.cat-btn.full{grid-column:1/-1}
+.top-bar{display:flex;align-items:center;justify-content:space-between;width:100%;margin-bottom:20px}
+.prog-track{width:100%;height:10px;background:rgba(255,255,255,.15);border-radius:5px;overflow:hidden;margin-bottom:20px}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--bll),var(--gd));border-radius:5px;transition:width .5s ease}
+.math-row{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;margin:20px 0;direction:ltr}
+.nb{background:rgba(255,255,255,.13);border:2px solid rgba(255,255,255,.28);border-radius:16px;width:84px;height:84px;display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:900;direction:ltr}
+.ob{font-size:48px;font-weight:900;color:var(--gd);width:42px;text-align:center}
+.eq{font-size:40px;color:rgba(255,255,255,.6)}
+.qb{background:rgba(255,215,0,.1);border:3px solid var(--gd);border-radius:16px;width:84px;height:84px;display:flex;align-items:center;justify-content:center;font-size:38px;font-weight:900;color:var(--gd);animation:qP 1.8s ease-in-out infinite}
+@keyframes qP{0%,100%{box-shadow:0 0 0 0 rgba(255,215,0,.5)}50%{box-shadow:0 0 0 10px rgba(255,215,0,0)}}
+.story-box{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:20px;margin-bottom:18px;font-size:20px;font-weight:500;line-height:2;text-align:right}
+.story-q{font-size:22px;font-weight:700;text-align:center;margin-bottom:4px;color:var(--gd)}
+.heb-s{font-size:28px;font-weight:700;text-align:center;line-height:2;margin:18px 0}
+.blank{display:inline-block;min-width:100px;border-bottom:4px solid var(--gd);margin:0 6px;vertical-align:middle;color:var(--gd);font-weight:900;font-size:26px}
+.ans-row{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:20px}
+.ans-btn{background:rgba(255,255,255,.09);color:#fff;border:2px solid rgba(255,255,255,.28);border-radius:16px;font-size:24px;font-weight:700;padding:14px 22px;cursor:pointer;font-family:'Rubik',sans-serif;transition:all .18s;min-width:100px;backdrop-filter:blur(8px)}
+.ans-btn:hover:not(:disabled){background:rgba(255,255,255,.18);border-color:var(--gd);transform:scale(1.06)}
+.ans-btn:disabled{cursor:default}
+.ans-btn.correct{background:var(--gn);border-color:var(--gn);animation:popIn .4s ease}
+.ans-btn.wrong{background:var(--rd);border-color:var(--rd);animation:shake .35s ease}
+@keyframes popIn{0%{transform:scale(1)}50%{transform:scale(1.18)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.stars-row{display:flex;gap:4px;justify-content:center}
+.star{font-size:26px;filter:grayscale(1);opacity:.2;transition:filter .3s,opacity .3s}
+.star.on{filter:none;opacity:1;animation:sPop .4s ease}
+@keyframes sPop{0%{transform:scale(.4)}60%{transform:scale(1.35)}100%{transform:scale(1)}}
+.ex-meta{display:flex;align-items:center;justify-content:space-between;width:100%;margin-bottom:16px}
+.ex-num{font-size:17px;font-weight:600;color:rgba(255,255,255,.7)}
+.btn-help{background:rgba(255,152,0,.18);border:2px solid rgba(255,152,0,.45);border-radius:50px;color:#FFCA28;font-family:'Rubik',sans-serif;font-size:15px;font-weight:600;padding:9px 20px;cursor:pointer;margin-top:14px;transition:background .2s}
+.btn-help:hover{background:rgba(255,152,0,.28)}
+.big-e{font-size:80px;text-align:center;margin:6px 0}
+.stars-tot{font-size:50px;font-weight:900;color:var(--gd);text-align:center;text-shadow:0 4px 20px rgba(255,215,0,.4)}
+.brow{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.1)}
+.brow:last-child{border-bottom:none}
+.subj-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%;margin:8px 0}
+.subj-btn{background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.2);border-radius:22px;padding:28px 16px;color:#fff;font-family:'Rubik',sans-serif;font-size:20px;font-weight:700;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:10px;backdrop-filter:blur(10px)}
+.subj-btn .ico{font-size:38px}
+.subj-btn .sm{font-size:13px;font-weight:400;opacity:.65}
+.subj-btn:hover{background:rgba(255,255,255,.15);border-color:var(--gd);transform:translateY(-5px);box-shadow:0 10px 28px rgba(255,215,0,.2)}
+.subj-btn.games-btn{border-color:rgba(255,215,0,.5);background:rgba(255,215,0,.08)}
+.subj-btn.games-locked{border-color:rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:rgba(255,255,255,.35);cursor:default}
+.subj-btn.games-locked:hover{transform:none;box-shadow:none;border-color:rgba(255,255,255,.1)}
+.session-badge{background:rgba(255,215,0,.15);border:1px solid rgba(255,215,0,.4);border-radius:50px;padding:6px 14px;font-size:14px;font-weight:700;color:var(--gd);text-align:center}
+.change-char-btn{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.2);border-radius:50px;padding:8px 16px;color:rgba(255,255,255,.7);font-family:'Rubik',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px}
+.change-char-btn:hover{background:rgba(255,255,255,.14);color:#fff}
+.mem-grid{display:grid;gap:8px;width:100%;max-width:500px;margin:0 auto}
+.mem-card{aspect-ratio:1;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.2);border-radius:12px;font-size:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s;position:relative;overflow:hidden}
+.mem-card.flipped,.mem-card.matched{background:rgba(255,255,255,.18);border-color:var(--gd)}
+.mem-card.matched{background:rgba(67,160,71,.3);border-color:var(--gn);cursor:default}
+.mem-card .back{opacity:0;transition:opacity .2s}
+.mem-card.flipped .back,.mem-card.matched .back{opacity:1}
+.mem-card .front{position:absolute;font-size:22px;opacity:1;transition:opacity .2s}
+.mem-card.flipped .front,.mem-card.matched .front{opacity:0}
+.opt-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:6px 0}
+.opt-btn{background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.2);border-radius:14px;padding:10px 18px;color:#fff;font-family:'Rubik',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:all .2s}
+.opt-btn:hover,.opt-btn.sel{background:rgba(255,215,0,.18);border-color:var(--gd);color:var(--gd)}
+.speed-timer{width:100%;height:12px;background:rgba(255,255,255,.15);border-radius:6px;overflow:hidden;margin-bottom:16px}
+.speed-fill{height:100%;background:linear-gradient(90deg,var(--rd),var(--gd));border-radius:6px;transition:width .1s linear}
+.speed-q{font-size:52px;font-weight:900;text-align:center;margin:16px 0;direction:ltr}
+#shooterCanvas{border-radius:16px;border:2px solid rgba(255,255,255,.2);display:block;max-width:100%;touch-action:none}
+.shooter-hud{display:flex;justify-content:space-between;align-items:center;width:100%;padding:0 10px;margin:8px 0;font-size:17px;font-weight:700}
+.hp-bar-wrap{width:100%;height:16px;background:rgba(255,0,0,.2);border-radius:8px;overflow:hidden;margin:4px 0}
+.hp-bar-fill{height:100%;background:linear-gradient(90deg,#e53935,#ff7043);border-radius:8px;transition:width .3s}
+.pu-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;width:100%}
+.pu-card{background:rgba(255,255,255,.07);border:2px solid rgba(255,255,255,.15);border-radius:14px;padding:8px 4px;cursor:pointer;transition:all .2s;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:700;text-align:center}
+.pu-card .pu-ico{font-size:24px}
+.pu-card:hover,.pu-card.sel{background:rgba(255,215,0,.15);border-color:var(--gd)}
+.pu-card.sel{border-width:3px}
+.ttt-board{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:280px;margin:16px auto}
+.ttt-cell{background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.2);border-radius:16px;height:85px;display:flex;align-items:center;justify-content:center;font-size:46px;cursor:pointer;transition:all .2s}
+.ttt-cell:hover:not(.taken){background:rgba(255,255,255,.15);border-color:var(--gd)}
+.ttt-cell.taken{cursor:default}
+.ttt-cell.X-cell{color:#42A5F5}
+.ttt-cell.O-cell{color:#ef5350}
+.ttt-cell.win-cell{background:rgba(255,215,0,.2);border-color:var(--gd);animation:popIn .4s ease}
+.ttt-status{font-size:22px;font-weight:800;text-align:center;margin:8px 0;min-height:36px}
+.mill-question{font-size:22px;font-weight:700;text-align:center;background:rgba(255,255,255,.07);border:2px solid rgba(255,215,0,.3);border-radius:20px;padding:20px;margin:10px 0;line-height:1.6}
+.mill-answers{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;margin:8px 0}
+.mill-ans{background:rgba(255,255,255,.08);border:2px solid rgba(255,255,255,.2);border-radius:16px;padding:14px 12px;color:#fff;font-family:'Rubik',sans-serif;font-size:18px;font-weight:700;cursor:pointer;transition:all .2s;text-align:center}
+.mill-ans:hover:not(:disabled){background:rgba(255,215,0,.15);border-color:var(--gd);transform:scale(1.02)}
+.mill-ans:disabled{cursor:default}
+.mill-ans.correct{background:rgba(67,160,71,.4);border-color:var(--gn)}
+.mill-ans.wrong{background:rgba(229,57,53,.4);border-color:var(--rd)}
+.mill-ans.faded{opacity:.25}
+.mill-prize{font-size:26px;font-weight:900;color:var(--gd);text-shadow:0 2px 12px rgba(255,215,0,.4)}
+.mill-lifelines{display:flex;gap:10px;justify-content:center;margin:6px 0}
+.mill-ll{background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.25);border-radius:50px;padding:8px 16px;font-size:16px;font-weight:700;cursor:pointer;font-family:'Rubik',sans-serif;transition:all .2s;color:#fff}
+.mill-ll:hover:not(:disabled){background:rgba(255,215,0,.2);border-color:var(--gd)}
+.mill-ll:disabled{opacity:.3;cursor:default}
+@keyframes fw{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--fx),var(--fy)) scale(0);opacity:0}}
+.firework{position:fixed;pointer-events:none;font-size:28px;animation:fw 1.2s ease-out forwards;z-index:100}
+@media(max-width:600px){
+  .h1{font-size:32px}.h2{font-size:22px}
+  .char-grid{grid-template-columns:repeat(4,1fr)}
+  .char-card img,.char-fallback{width:58px;height:70px}
+  .nb,.qb{width:68px;height:68px;font-size:32px}
+  .ob{font-size:36px}
+  .ans-btn{font-size:20px;min-width:84px}
+  .heb-s{font-size:22px}
+  .story-box{font-size:17px}
+  .char-img,.char-emoji{width:74px;height:90px}
+  .ttt-board{width:240px}
+  .ttt-cell{height:72px;font-size:38px}
+  .mill-answers{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="bg-layer">
+  <div class="bg-g"></div>
+  <div class="star-f" id="starF"></div>
+  <div id="slinesC"></div>
+</div>
+<div class="char-wrap" id="charWrap" style="display:none">
+  <div class="bubble" id="bubble"></div>
+  <div style="display:flex;align-items:flex-end">
+    <img id="charImg" class="char-img" src="" alt="" onerror="this.style.display='none';document.getElementById('charEmoji').style.display='flex'">
+    <div id="charEmoji" class="char-emoji"></div>
+  </div>
+</div>
+<div class="app">
+
+<div class="screen active" id="screen-name">
+  <div style="font-size:80px;text-align:center;margin-bottom:8px">🌟</div>
+  <div class="h1" style="margin-bottom:8px">בְּרוּכִים הַבָּאִים!</div>
+  <div class="sub">בּוֹאוּ נֵדַע קְצָת עָלֶיךָ</div>
+  <div class="card" style="display:flex;flex-direction:column;align-items:center;gap:18px;max-width:400px">
+    <div style="font-size:20px;font-weight:700">מָה שִׁמְךָ?</div>
+    <input class="name-input" id="nameInput" type="text" placeholder="כְּתֹב אֶת שִׁמְךָ..." maxlength="15" autocomplete="off">
+    <div style="font-size:18px;font-weight:700;margin-top:4px">אַתָּה:</div>
+    <div class="gender-row">
+      <button class="gen-btn" id="gb-boy" onclick="selGender('m')"><span>👦</span>יֶלֶד</button>
+      <button class="gen-btn" id="gb-girl" onclick="selGender('f')"><span>👧</span>יַלְדָּה</button>
+    </div>
+    <button class="btn btn-gd" id="nameNextBtn" onclick="goToChar()" style="font-size:22px;padding:18px 50px;width:100%;margin-top:4px" disabled>קָדִימָה! 🚀</button>
+  </div>
+</div>
+
+<div class="screen" id="screen-char">
+  <div class="h2" id="charTitle">בְּחַר אֶת הַדְּמוּת שֶׁלְּךָ!</div>
+  <div class="sub" style="font-size:16px">הִיא תְּלַוֶּה אוֹתְךָ לְאוֹרֶךְ כָּל הַמִּשְׂחָק</div>
+  <div class="char-grid" id="charGrid"></div>
+  <button class="btn btn-gd" id="charOkBtn" onclick="confirmChar()" style="margin-top:20px;font-size:20px;padding:16px 44px" disabled>בְּחַרְתִּי! ✓</button>
+</div>
+
+<div class="screen" id="screen-home">
+  <div class="top-bar" style="margin-bottom:8px">
+    <div id="homeWelcome" style="font-size:20px;font-weight:700;color:var(--gd)"></div>
+    <button class="change-char-btn" onclick="changeChar()">🔄 הַחְלֵף דְּמוּת</button>
+  </div>
+  <div class="sub" style="font-size:17px;margin-bottom:12px">מָה תִּרְצֶה לִלְמֹד הַיּוֹם?</div>
+  <div class="subj-grid">
+    <button class="subj-btn" onclick="nav('math-cat')"><span class="ico">📐</span><span>חֶשְׁבּוֹן</span><span class="sm">חִיבּוּר וְחִסּוּר</span></button>
+    <button class="subj-btn" onclick="nav('heb-cat')"><span class="ico">📖</span><span>שָׂפָה</span><span class="sm">מִילִּים וּמִשְׁפָּטִים</span></button>
+    <button class="subj-btn" onclick="nav('story-cat')"><span class="ico">📚</span><span>סִיפּוּרִים</span><span class="sm">קְרָא וְהָבֵן</span></button>
+    <button class="subj-btn" id="gamesBtn" onclick="tryGames()">
+      <span class="ico" id="gamesIco">🎮</span>
+      <span id="gamesBtnLbl">מִשְׂחָקִים</span>
+      <span class="sm" id="gamesSmLbl"></span>
+    </button>
+  </div>
+  <div id="sessionInfo" class="session-badge" style="margin-top:14px"></div>
+  <div style="margin-top:10px;width:100%;max-width:340px">
+    <div style="font-size:13px;color:rgba(255,255,255,.5);text-align:center;margin-bottom:6px" id="cycleLabel"></div>
+    <div style="height:8px;background:rgba(255,255,255,.12);border-radius:4px;overflow:hidden">
+      <div id="cycleFill" style="height:100%;background:linear-gradient(90deg,#42A5F5,#FFD700);border-radius:4px;transition:width .5s ease;width:0%"></div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-math-cat">
+  <div class="top-bar">
+    <button class="btn btn-gh" onclick="nav('home')">חֲזוֹר ←</button>
+    <span style="font-size:17px;font-weight:700;opacity:.7">📐 חֶשְׁבּוֹן</span>
+  </div>
+  <div class="h2">בְּחַר רָמָה</div>
+  <div class="cat-grid" style="margin-top:10px">
+    <button class="cat-btn" onclick="startMath('easy')"><span class="ico">⭐</span><span>קַל</span><span class="sm">מִסְפָּרִים עַד 10</span></button>
+    <button class="cat-btn" onclick="startMath('med')"><span class="ico">⭐⭐</span><span>בֵּינוֹנִי</span><span class="sm">מִסְפָּרִים עַד 20</span></button>
+    <button class="cat-btn full" onclick="startMath('hard')"><span class="ico">⭐⭐⭐</span><span>מְאַתְגֵּר</span><span class="sm">מִסְפָּרִים גְּדוֹלִים עַד 100</span></button>
+  </div>
+</div>
+
+<div class="screen" id="screen-heb-cat">
+  <div class="top-bar">
+    <button class="btn btn-gh" onclick="nav('home')">חֲזוֹר ←</button>
+    <span style="font-size:17px;font-weight:700;opacity:.7">📖 שָׂפָה</span>
+  </div>
+  <div class="h2">בְּחַר נוֹשֵׂא</div>
+  <div class="cat-grid" style="margin-top:10px">
+    <button class="cat-btn" onclick="startHeb('family')"><span class="ico">👨‍👩‍👦</span><span>עוֹלַם הַמִּשְׁפָּחָה</span></button>
+    <button class="cat-btn" onclick="startHeb('food')"><span class="ico">🍕</span><span>עוֹלַם הָאֹכֶל</span></button>
+    <button class="cat-btn" onclick="startHeb('animals')"><span class="ico">🦁</span><span>עוֹלַם הַחַיּוֹת</span></button>
+    <button class="cat-btn" onclick="startHeb('space')"><span class="ico">🚀</span><span>עוֹלַם הַחָלָל</span></button>
+    <button class="cat-btn full" onclick="startHeb('earth')"><span class="ico">🌍</span><span>עוֹלַם כַּדּוּר הָאָרֶץ</span></button>
+  </div>
+</div>
+
+<div class="screen" id="screen-story-cat">
+  <div class="top-bar">
+    <button class="btn btn-gh" onclick="nav('home')">חֲזוֹר ←</button>
+    <span style="font-size:17px;font-weight:700;opacity:.7">📚 סִיפּוּרִים</span>
+  </div>
+  <div class="h2">בְּחַר עוֹלָם</div>
+  <div class="cat-grid" style="margin-top:10px">
+    <button class="cat-btn" onclick="startStory('family')"><span class="ico">👨‍👩‍👦</span><span>עוֹלַם הַמִּשְׁפָּחָה</span></button>
+    <button class="cat-btn" onclick="startStory('space')"><span class="ico">🚀</span><span>עוֹלַם הַחָלָל</span></button>
+    <button class="cat-btn" onclick="startStory('earth')"><span class="ico">🌍</span><span>כַּדּוּר הָאָרֶץ</span></button>
+    <button class="cat-btn" onclick="startStory('israel')"><span class="ico">🇮🇱</span><span>מְדִינַת יִשְׂרָאֵל</span></button>
+    <button class="cat-btn" onclick="startStory('animals')"><span class="ico">🦁</span><span>עוֹלַם הַחַיּוֹת</span></button>
+    <button class="cat-btn" onclick="startStory('dinos')"><span class="ico">🦕</span><span>עוֹלַם הַדִּינוֹזָאוּרִים</span></button>
+  </div>
+</div>
+
+<div class="screen" id="screen-ex">
+  <div class="top-bar">
+    <button class="btn btn-gh" onclick="backFromEx()">חֲזוֹר ←</button>
+    <div class="ex-meta" style="flex:1;margin-right:14px">
+      <span class="ex-num" id="exNum">תַּרְגִּיל 1 מִתּוֹךְ 5</span>
+      <div class="stars-row" id="liveStars"></div>
+    </div>
+  </div>
+  <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+  <div class="card">
+    <div id="exContent"></div>
+    <div class="ans-row" id="exAnswers"></div>
+    <div style="text-align:center"><button class="btn-help" onclick="askHelp()">🤔 לֹא הֵבַנְתִּי</button></div>
+  </div>
+</div>
+
+<div class="screen" id="screen-result">
+  <div class="big-e" id="resEmoji">🌟</div>
+  <div class="h1" style="font-size:36px;margin-bottom:6px" id="resTitle">כָּל הַכָּבוֹד!</div>
+  <div class="sub" id="resSub">עָשִׂיתָ עֲבוֹדָה מְדַהִימָה!</div>
+  <div class="stars-tot" id="resTot">0 ⭐ מִתּוֹךְ 25</div>
+  <div class="card" style="margin-top:18px">
+    <div style="font-size:16px;font-weight:700;text-align:center;opacity:.7;margin-bottom:12px">תוֹצָאוֹת לְפִי תַּרְגִּיל:</div>
+    <div id="resList"></div>
+  </div>
+  <div style="display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;justify-content:center">
+    <button class="btn btn-gd" onclick="playAgain()">🔄 עוֹד סִיבּוּב!</button>
+    <button class="btn btn-bl" onclick="nav('home')">🏠 תַּפְרִיט רָאשִׁי</button>
+  </div>
+</div>
+
+<div class="screen" id="screen-games">
+  <div class="top-bar">
+    <button class="btn btn-gh" onclick="nav('home')">חֲזוֹר ←</button>
+    <span style="font-size:17px;font-weight:700;opacity:.7">🎮 מִשְׂחָקִים</span>
+  </div>
+  <div class="h2">בְּחַר מִשְׂחָק!</div>
+  <div class="sub" style="font-size:15px" id="gamesHubSub">כָּל הַכָּבוֹד! 🏆</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%">
+    <button class="cat-btn" onclick="nav('memory-setup')"><span class="ico">🃏</span><span>זִיכָּרוֹן</span><span class="sm">מְצָא זּוּגוֹת</span></button>
+    <button class="cat-btn" onclick="nav('speed-setup')"><span class="ico">⚡</span><span>חֶשְׁבּוֹן מָהִיר</span><span class="sm">נֶגֶד שָׁעוֹן</span></button>
+    <button class="cat-btn" onclick="nav('shooter-setup')"><span class="ico">🚀</span><span>יוֹרֶה חָלָל</span><span class="sm">5 שְׁלָבִים</span></button>
+    <button class="cat-btn" onclick="initTTT()"><span class="ico">❌⭕</span><span>אִיקְס עִיגּוּל</span><span class="sm">נֶגֶד מַחְשֵׁב</span></button>
+    <button class="cat-btn full" onclick="startMillionaire()"><span class="ico">💰</span><span>מִי רוֹצֶה לִהְיוֹת מִילְיוֹנֵר?</span><span class="sm">5 נוֹשְׂאִים</span></button>
+  </div>
+  <div id="gamesLeftInfo" style="margin-top:14px;font-size:15px;color:rgba(255,215,0,.8);text-align:center;font-weight:700"></div>
+</div>
+
+<div class="screen" id="screen-memory-setup">
+  <div class="top-bar">
+    <button class="btn btn-gh" onclick="nav('games')">חֲזוֹר ←</button>
+    <span style="font-size:17px;font-weight:700;opacity:.7">🃏 הֲגָדָרוֹת</span>
+  </div>
+  <div class="h2">🃏 מִשְׂחַק זִיכָּרוֹן</div>
+  <div class="card" style="gap:16px;display:flex;flex-direction:column">
+    <div>
+      <div style="font-size:16px;font-weight:700;margin-bottom:8px;text-align:center">כַּמָּה קְלָפִים?</div>
+      <div class="opt-row">
+        <button class="opt-btn sel" onclick="selMO('count',4,this)">4</button>
+        <button class="opt-btn" onclick="selMO('count',8,this)">8</button>
+        <button class="opt-btn" onclick="selMO('count',16,this)">16</button>
+        <button class="opt-btn" onclick="selMO('count',20,this)">20</button>
+        <button class="opt-btn" onclick="selMO('count',30,this)">30</button>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:16px;font-weight:700;margin-bottom:8px;text-align:center">נוֹשֵׂא:</div>
+      <div class="opt-row">
+        <button class="opt-btn sel" onclick="selMO('theme','animals',this)">🦁 חַיּוֹת</button>
+        <button class="opt-btn" onclick="selMO('theme','food',this)">🍕 אֹכֶל</button>
+        <button class="opt-btn" onclick="selMO('theme','space',this)">🚀 חָלָל</button>
+        <button class="opt-btn" onclick="selMO('theme','sports',this)">⚽ סְפּוֹרְט</button>
+        <button class="opt-btn" onclick="selMO('theme','dinos',this)">🦕 דִּינוֹ</button>
+      </div>
+    </div>
+    <button class="btn btn-gd" onclick="startMemory()" style="width:100%;font-size:20px">הַתְחֵל! 🃏</button>
+  </div>
+</div>
+
+<div class="screen" id="screen-memory">
+  <div class="top-bar">
+    <button class="btn btn-gh" onclick="gameCompleted();nav('games')">חֲזוֹר ←</button>
+    <span id="memMoves" style="font-size:17px;font-weight:700;color:var(--gd)">מַהֲלָכִים: 0</span>
+  </div>
+  <div class="h2" style="margin-bottom:10px">🃏 מִשְׂחַק זִיכָּרוֹן</div>
+  <div class="mem-grid" id="memGrid"></div>
+  <div id="memWin" style="display:none;text-align:center;margin-top:14px">
+    <div style="font-size:48px">🏆</div>
+    <div style="font-size:24px;font-weight:900;color:var(--gd);margin:8px 0" id="memWinMsg"></div>
+    <div style="display:flex;gap:10px;justify-content:center;margin-top:10px">
+      <button class="btn btn-gd" onclick="startMemory()">שׁוּב? 🔄</button>
+      <button class="btn btn-bl" onclick="gameCompleted();nav('games')">חֲזוֹר 🏠</button>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-speed-setup">
+  <div class="top-bar">
+    <button class="btn btn-gh" onclick="nav('games')">חֲזוֹר ←</button>
+    <span style="font-size:17px;font-weight:700;opacity:.7">⚡ הֲגָדָרוֹת</span>
+  </div>
+  <div class="h2">⚡ חֶשְׁבּוֹן מָהִיר</div>
+  <div class="card" style="gap:16px;display:flex;flex-direction:column">
+    <div>
+      <div style="font-size:16px;font-weight:700;margin-bottom:8px;text-align:center">כַּמָּה שְׁאֵלוֹת?</div>
+      <div class="opt-row">
+        <button class="opt-btn" onclick="selSO('count',5,this)">5</button>
+        <button class="opt-btn sel" onclick="selSO('count',10,this)">10</button>
+        <button class="opt-btn" onclick="selSO('count',15,this)">15</button>
+        <button class="opt-btn" onclick="selSO('count',20,this)">20</button>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:16px;font-weight:700;margin-bottom:8px;text-align:center">זְמַן לְכָל שְׁאֵלָה:</div>
+      <div class="opt-row">
+        <button class="opt-btn" onclick="selSO('time',10,this)">10 שֶׁנִיּוֹת</button>
+        <button class="opt-btn" onclick="selSO('time',15,this)">15 שֶׁנִיּוֹת</button>
+        <button class="opt-btn sel" onclick="selSO('time',20,this)">20 שֶׁנִיּוֹת</button>
+        <button class="opt-btn" onclick="selSO('time',30,this)">30 שֶׁנִיּוֹת</button>
+      </div>
+    </div>
+    <button class="btn btn-gd" onclick="startSpeed()" style="width:100%;font-size:20px">הַתְחֵל! ⚡</button>
+  </div>
+</div>
+
+<div class="screen" id="screen-speed">
+  <div class="top-bar">
+    <button class="btn btn-gh" onclick="stopSpeed();gameCompleted();nav('games')">חֲזוֹר ←</button>
+    <span id="speedScore" style="font-size:17px;font-weight:700;color:var(--gd)">✓ 0</span>
+  </div>
+  <div class="h2" style="margin-bottom:4px">⚡ חֶשְׁבּוֹן מָהִיר!</div>
+  <div style="font-size:14px;color:rgba(255,255,255,.5);text-align:center;margin-bottom:6px" id="speedQNum"></div>
+  <div class="speed-timer"><div class="speed-fill" id="speedFill" style="width:100%"></div></div>
+  <div id="speedContent">
+    <div class="speed-q" id="speedQ"></div>
+    <div class="ans-row" id="speedAns"></div>
+  </div>
+  <div id="speedEnd" style="display:none;text-align:center">
+    <div style="font-size:56px">⚡</div>
+    <div style="font-size:28px;font-weight:900;color:var(--gd);margin:8px 0" id="speedEndMsg"></div>
+    <div style="display:flex;gap:10px;justify-content:center;margin-top:10px">
+      <button class="btn btn-gd" onclick="startSpeed()">שׁוּב? 🔄</button>
+      <button class="btn btn-bl" onclick="gameCompleted();nav('games')">חֲזוֹר 🏠</button>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-shooter-setup">
+  <div class="top-bar">
+    <button class="btn btn-gh" onclick="nav('games')">חֲזוֹר ←</button>
+    <span style="font-size:17px;font-weight:700;opacity:.7">🚀 הֲגָדָרוֹת</span>
+  </div>
+  <div class="h2">🚀 יוֹרֶה הַחָלָל</div>
+  <div class="card" style="gap:14px;display:flex;flex-direction:column">
+    <div>
+      <div style="font-size:16px;font-weight:700;margin-bottom:8px;text-align:center">כַּמָּה חַיִּים?</div>
+      <div class="opt-row">
+        <button class="opt-btn" onclick="selShO('lives',3,this)">3 ❤️</button>
+        <button class="opt-btn sel" onclick="selShO('lives',5,this)">5 ❤️</button>
+        <button class="opt-btn" onclick="selShO('lives',7,this)">7 ❤️</button>
+        <button class="opt-btn" onclick="selShO('lives',10,this)">10 ❤️</button>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:16px;font-weight:700;margin-bottom:8px;text-align:center">מְהִירוּת:</div>
+      <div class="opt-row">
+        <button class="opt-btn sel" onclick="selShO('speed','easy',this)">🐢 קַל</button>
+        <button class="opt-btn" onclick="selShO('speed','med',this)">🐇 בֵּינוֹנִי</button>
+        <button class="opt-btn" onclick="selShO('speed','hard',this)">🦅 קָשֶׁה</button>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:16px;font-weight:700;margin-bottom:6px;text-align:center">בְּחַר עַד 5 כּוֹחוֹת מִיּוּחָדִים: <span id="puCount" style="color:var(--gd)">0/5</span></div>
+      <div class="pu-grid" id="puGrid"></div>
+    </div>
+    <button class="btn btn-gd" onclick="startShooter()" style="width:100%;font-size:20px">יְאַלָּה! 🚀</button>
+  </div>
+</div>
+
+<div class="screen" id="screen-shooter" style="max-width:500px">
+  <div class="shooter-hud">
+    <div id="shHudLives"></div>
+    <div id="shHudLevel" style="color:var(--gd)"></div>
+    <div id="shHudScore"></div>
+  </div>
+  <div id="shBossHpWrap" style="display:none;padding:0 10px;margin-bottom:4px;width:100%">
+    <div style="font-size:13px;font-weight:700;text-align:center;color:#ef5350">👾 בּוֹס</div>
+    <div style="height:16px;background:rgba(255,0,0,.2);border-radius:8px;overflow:hidden;margin:3px 0">
+      <div id="shBossHp" style="height:100%;background:linear-gradient(90deg,#e53935,#ff7043);border-radius:8px;transition:width .3s;width:100%"></div>
+    </div>
+  </div>
+  <canvas id="shooterCanvas" width="480" height="520" style="border-radius:16px;border:2px solid rgba(255,255,255,.2);display:block;max-width:100%;touch-action:none"></canvas>
+  <div id="shOverlay" style="display:none;text-align:center;padding:16px">
+    <div style="font-size:60px" id="shOverEmoji"></div>
+    <div style="font-size:24px;font-weight:900;color:var(--gd);margin:8px 0" id="shOverMsg"></div>
+    <div style="font-size:16px;color:rgba(255,255,255,.7);margin-bottom:14px" id="shOverSub"></div>
+    <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <button class="btn btn-gd" id="shNextBtn" onclick="shooterNextAction()">הַמְשֵׁךְ ▶</button>
+      <button class="btn btn-bl" onclick="shooterStop();gameCompleted();nav('games')">חֲזוֹר 🏠</button>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="screen-ttt">
+  <div class="top-bar">
+    <button class="btn btn-gh" onclick="gameCompleted();nav('games')">חֲזוֹר ←</button>
+    <span style="font-size:17px;font-weight:700;opacity:.7">❌⭕ אִיקְס עִיגּוּל</span>
+  </div>
+  <div class="h2" style="margin-bottom:6px">אִיקְס עִיגּוּל</div>
+  <div style="display:flex;gap:10px;justify-content:center;margin-bottom:10px">
+    <button class="opt-btn sel" id="tttVsAI" onclick="tttSetMode('ai')">🤖 נֶגֶד מַחְשֵׁב</button>
+    <button class="opt-btn" id="tttVs2P" onclick="tttSetMode('2p')">👫 שְׁנַיִם</button>
+  </div>
+  <div class="ttt-status" id="tttStatus"></div>
+  <div class="ttt-board" id="tttBoard">
+    <div class="ttt-cell" onclick="tttClick(0)" id="tc0"></div>
+    <div class="ttt-cell" onclick="tttClick(1)" id="tc1"></div>
+    <div class="ttt-cell" onclick="tttClick(2)" id="tc2"></div>
+    <div class="ttt-cell" onclick="tttClick(3)" id="tc3"></div>
+    <div class="ttt-cell" onclick="tttClick(4)" id="tc4"></div>
+    <div class="ttt-cell" onclick="tttClick(5)" id="tc5"></div>
+    <div class="ttt-cell" onclick="tttClick(6)" id="tc6"></div>
+    <div class="ttt-cell" onclick="tttClick(7)" id="tc7"></div>
+    <div class="ttt-cell" onclick="tttClick(8)" id="tc8"></div>
+  </div>
+  <button class="btn btn-gd" onclick="tttReset()" style="margin-top:12px">🔄 מִשְׂחָק חָדָשׁ</button>
+</div>
+
+<div class="screen" id="screen-millionaire">
+  <div class="top-bar">
+    <button class="btn btn-gh" onclick="gameCompleted();nav('games')">חֲזוֹר ←</button>
+    <div class="mill-prize" id="millPrize">0 ₪</div>
+  </div>
+  <div class="mill-lifelines">
+    <button class="mill-ll" id="ll50" onclick="use5050()">50/50</button>
+    <button class="mill-ll" id="llParent" onclick="useParents()">👨‍👩‍👦 שְׁאַל</button>
+    <button class="mill-ll" id="llAudience" onclick="useAudience()">👥 קָהָל</button>
+  </div>
+  <div style="font-size:13px;color:rgba(255,255,255,.5);text-align:center;margin-bottom:4px" id="millQNum"></div>
+  <div class="mill-question" id="millQ"></div>
+  <div class="mill-answers" id="millAnswers"></div>
+  <div id="millAudienceBar" style="display:none;background:rgba(255,255,255,.06);border-radius:14px;padding:12px;margin-top:6px"></div>
+  <div id="millEnd" style="display:none;text-align:center;padding:10px">
+    <div style="font-size:56px" id="millEndEmoji">🎉</div>
+    <div style="font-size:24px;font-weight:900;color:var(--gd);margin:10px 0" id="millEndMsg"></div>
+    <div style="display:flex;gap:10px;justify-content:center;margin-top:12px">
+      <button class="btn btn-gd" onclick="startMillionaire()">שׁוּב? 🔄</button>
+      <button class="btn btn-bl" onclick="gameCompleted();nav('games')">חֲזוֹר 🏠</button>
+    </div>
+  </div>
+</div>
+
+</div>
+<script>
+
+// DATA
+const CHARS=[
+  {id:'sonic',   name:'סוֹנִיק כָּחֹל',    img:'Challenge_Mamad/blue_sonic.jpg',   fb:'💙'},
+  {id:'shadow',  name:'שֶׁדּוֹ הַשָּׁחוֹר', img:'Challenge_Mamad/shadow_sonic.jpg', fb:'🖤'},
+  {id:'nemo',    name:'נֶמוֹ',              img:'Challenge_Mamad/nemo.jpg',          fb:'🐟'},
+  {id:'hulk',    name:'הַאלְק',             img:'Challenge_Mamad/Hulk.png',          fb:'💚'},
+  {id:'captain', name:'קַפְּטֶן אָמֶרִיקָה', img:'Challenge_Mamad/captatain_america.jpg', fb:'🛡️'},
+  {id:'panther', name:'פַּנְתֵּר שָׁחוֹר',  img:'Challenge_Mamad/black_panter.jpg', fb:'🐾'},
+  {id:'ironman', name:'אַיְרוֹן מֵן',        img:'Challenge_Mamad/iron_man.jpg',     fb:'❤️'},
+  {id:'mickey',  name:'מִיקִי מָאוּס',       img:'Challenge_Mamad/Mickey_Mouse.png', fb:'🎵'},
+  {id:'minnie',  name:'מִינִי מָאוּס',       img:'Challenge_Mamad/minni_mouse.jpg',  fb:'🎀'},
+  {id:'kpop',    name:'קֵיי-פּוֹפּ',         img:'Challenge_Mamad/kpop_hunters.jpg', fb:'⭐'},
+];
+const CMSG={
+  sonic:  {e:['קָדִימָה! אַתָּה מְהִיר!','אַתָּה יָכוֹל!'],w:['כָּל הַכָּבוֹד! 💙','מְדַהִים!'],f:['עוֹד פַּעַם!','אַל תְּוַתֵּר!']},
+  shadow: {e:['הֱיֵה חָזָק!','קָדִימָה!'],w:['מְדַהִים! 🖤','כָּל הַכָּבוֹד!'],f:['עוֹד פַּעַם!','לֹא מְוַתְּרִים!']},
+  nemo:   {e:['אַל תִּפְחַד!','אַתָּה יָכוֹל!'],w:['מְדַהִים! 🐟','הִצְלַחְתָּ!'],f:['גַּם אֲנִי תָּעִיתִי!','עוֹד פַּעַם!']},
+  hulk:   {e:['הַאלְק חָזָק!','קָדִימָה!'],w:['גִּיבּוֹר! 💚','כָּל הַכָּבוֹד!'],f:['גִּיבּוֹרִים לֹא מְוַתְּרִים!','תְּנַסֶּה!']},
+  captain:{e:['כָּבוֹד לַלּוֹחֵם!','קָדִימָה חַיָּל!'],w:['מִשִּׁימָה הוּשְׁלְמָה! 🛡','כָּל הַכָּבוֹד!'],f:['נְנַסֶּה שׁוּב!','חָזָק!']},
+  panther:{e:['כְּמוֹ פַּנְתֵּר! 🐾','קָדִימָה!'],w:['מֶלֶךְ! 🖤','מְדַהִים!'],f:['עוֹד פַּעַם!','אַל תְּוַתֵּר!']},
+  ironman:{e:['כְּמוֹ טוֹנִי!','קָדִימָה!'],w:['גֵּאוּת! ❤️','מְדַהִים!'],f:['גַּם אֲנִי טָעִיתִי!','תְּנַסֶּה!']},
+  mickey: {e:['הֵי הֵי! 🎵','קָדִימָה!'],w:['כּוֹכָב שֶׁלִּי! 🌟','כָּל הַכָּבוֹד!'],f:['תְּנַסֶּה שׁוּב!','עוֹד פַּעַם!']},
+  minnie: {e:['אַתָּה מוֹצְלָח! 🎀','קָדִימָה!'],w:['מוּשְׁלָם! 💕','כָּל הַכָּבוֹד!'],f:['לֹא נוֹרָא! עוֹד פַּעַם!','תְּנַסֶּה שׁוּב!']},
+  kpop:   {e:['וָאוּ! ✨','קָדִימָה!'],w:['סוּפֶּר-סְטַאר! 🌟','מְדַהִים!'],f:['עוֹד פַּעַם!','אַתָּה יָכוֹל!']},
+};
+
+const HEB={
+  family:[
+    {s:'אֲנִי ___ אֶת אִמָּא שֶׁלִּי',a:'אוֹהֵב',o:['אוֹהֵב','אוֹכֵל','יוֹשֵׁב']},
+    {s:'אַבָּא ___ אוֹתִי לִשְׁלוֹם',a:'מְנַשֵּׁק',o:['מְנַשֵּׁק','בּוֹכֶה','רָץ']},
+    {s:'הָאָח שֶׁלִּי ___ בַּחֶדֶר',a:'מְשַׂחֵק',o:['מְשַׂחֵק','אוֹכֵל','יָשֵׁן']},
+    {s:'אִמָּא ___ לִי סִיפּוּר',a:'מְסַפֶּרֶת',o:['מְסַפֶּרֶת','שָׁרָה','בּוֹכָה']},
+    {s:'הַמִּשְׁפָּחָה שֶׁלִּי ___ אוֹתִי',a:'אוֹהֶבֶת',o:['אוֹהֶבֶת','שׁוֹכַחַת','פּוֹחֶדֶת']},
+    {s:'אֲנִי וְאַבָּא ___ בַּגַּן',a:'הוֹלְכִים',o:['הוֹלְכִים','יְשֵׁנִים','אוֹכְלִים']},
+    {s:'הָאָחוֹת שֶׁלִּי ___ עִם בֻּבָּה',a:'מְשַׂחֶקֶת',o:['מְשַׂחֶקֶת','לוֹמֶדֶת','אוֹכֶלֶת']},
+    {s:'אִמָּא ___ אֶת הָאֹכֶל',a:'מְבַשֶּׁלֶת',o:['מְבַשֶּׁלֶת','כּוֹתֶבֶת','שָׁרָה']},
+    {s:'בַּלַּיְלָה אֲנִי ___ בַּמִּיטָּה',a:'יָשֵׁן',o:['יָשֵׁן','מְשַׂחֵק','אוֹכֵל']},
+    {s:'סַבְתָּא ___ לִי עוּגָה',a:'אוֹפָה',o:['אוֹפָה','שׁוֹתָה','רָצָה']},
+  ],
+  food:[
+    {s:'אֲנִי אוֹהֵב לֶאֱכֹל ___',a:'פִּיצָּה',o:['פִּיצָּה','אֶבֶן','שֻׁלְחָן']},
+    {s:'בַּבֹּקֶר אֲנִי שׁוֹתֶה ___',a:'חָלָב',o:['חָלָב','אֲוִיר','עֵץ']},
+    {s:'הַשּׁוֹקוֹלָד הוּא ___',a:'מָתוֹק',o:['מָתוֹק','מַר','חָרִיף']},
+    {s:'הַבָּנָנָה צְבָעָהּ ___',a:'צָהֹב',o:['צָהֹב','אָדֹם','כָּחֹל']},
+    {s:'הַגְּלִידָה קָרָה וּ___',a:'מְתוּקָה',o:['מְתוּקָה','חַמָּה','מְלוּחָה']},
+    {s:'הַתּוּת צְבָעוֹ ___',a:'אָדֹם',o:['אָדֹם','כָּחֹל','יָרֹק']},
+    {s:'הַלֶּחֶם עָשׂוּי מִ___',a:'קֶמַח',o:['קֶמַח','חָלָב','שֶׁמֶן']},
+    {s:'הַגֶּזֶר צְבָעוֹ ___',a:'כָּתֹם',o:['כָּתֹם','סָגֹל','לָבָן']},
+    {s:'בְּפֶסַח אוֹכְלִים ___',a:'מַצָּה',o:['מַצָּה','עוּגָה','פַּסְתָּה']},
+    {s:'הַתַּפּוּחַ הוּא ___',a:'פְּרִי',o:['פְּרִי','יֶרֶק','חַיָּה']},
+  ],
+  animals:[
+    {s:'הַ___ גָּדוֹל וְחָזָק',a:'אַרְיֵה',o:['אַרְיֵה','עַכְבָּר','צִפּוֹר']},
+    {s:'הָ___ אוֹהֵב גְּזָרִים',a:'אַרְנַב',o:['אַרְנַב','חָתוּל','כֶּלֶב']},
+    {s:'הַ___ גָּר בַּיָּם',a:'דָּג',o:['דָּג','חָתוּל','פִּיל']},
+    {s:'הַ___ עָף בַּשָּׁמַיִם',a:'צִפּוֹר',o:['צִפּוֹר','פִּיל','כֶּלֶב']},
+    {s:'הַ___ נוֹבֵחַ',a:'כֶּלֶב',o:['כֶּלֶב','חָתוּל','פָּרָה']},
+    {s:'הַ___ נוֹתֶנֶת חָלָב',a:'פָּרָה',o:['פָּרָה','כֶּלֶב','אַרְיֵה']},
+    {s:'לַ___ יֵשׁ חֶדֶק אָרֹךְ',a:'פִּיל',o:['פִּיל','אַרְנַב','נָחָשׁ']},
+    {s:'לַ___ יֵשׁ פַּסִּים שְׁחֹרִים וּלְבָנִים',a:'זֶבְרָה',o:['זֶבְרָה','אַרְיֵה','פִּיל']},
+    {s:'הַ___ קוֹפֵץ מֵעֵץ לְעֵץ',a:'קוֹף',o:['קוֹף','דָּג','כֶּלֶב']},
+    {s:'הַ___ מְיַיֵּלֵל בַּלַּיְלָה',a:'זְאֵב',o:['זְאֵב','חָתוּל','פָּרָה']},
+  ],
+  space:[
+    {s:'הַ___ מֵאִיר לָנוּ בַּיּוֹם',a:'שֶׁמֶשׁ',o:['שֶׁמֶשׁ','יָרֵחַ','כּוֹכָב']},
+    {s:'בַּלַּיְלָה רוֹאִים ___ בַּשָּׁמַיִם',a:'כּוֹכָבִים',o:['כּוֹכָבִים','עֲנָנִים','עֵצִים']},
+    {s:'הַ___ מֵאִיר בַּלַּיְלָה',a:'יָרֵחַ',o:['יָרֵחַ','שֶׁמֶשׁ','כּוֹכָב']},
+    {s:'אַסְטְרוֹנָאוּט טָס לַ___',a:'חָלָל',o:['חָלָל','יָם','הָרִים']},
+    {s:'כַּדּוּר הָאָרֶץ נָע סְבִיב הַ___',a:'שֶׁמֶשׁ',o:['שֶׁמֶשׁ','יָרֵחַ','כּוֹכָב']},
+    {s:'רָקֶטָה עָפָה לַ___',a:'חָלָל',o:['חָלָל','יָם','אֲדָמָה']},
+    {s:'בַּחָלָל אֵין ___ לִנְשֹׁם',a:'אֲוִיר',o:['אֲוִיר','מַיִם','אֹכֶל']},
+    {s:'הַחָלָל הוּא ___ מְאוֹד',a:'גָּדוֹל',o:['גָּדוֹל','קָטָן','קָרוֹב']},
+    {s:'כַּדּוּר הָאָרֶץ הוּא כּוֹכַב ___',a:'לֶכֶת',o:['לֶכֶת','רֹקֵד','שָׁר']},
+    {s:'בַּחָלָל יֵשׁ הַרְבֵּה ___',a:'כּוֹכָבִים',o:['כּוֹכָבִים','בָּתִּים','עֵצִים']},
+  ],
+  earth:[
+    {s:'הַ___ הוּא גָּדוֹל וְכָחֹל',a:'יָם',o:['יָם','הַר','מִדְבָּר']},
+    {s:'עַל הַ___ גְּדֵלִים עֵצִים',a:'יַעַר',o:['יַעַר','יָם','מִדְבָּר']},
+    {s:'בַּ___ יֵשׁ הַרְבֵּה חוֹל',a:'מִדְבָּר',o:['מִדְבָּר','יַעַר','הַר']},
+    {s:'הַ___ זוֹרֵם לַיָּם',a:'נָהָר',o:['נָהָר','הַר','עָנָן']},
+    {s:'הַ___ יוֹרֵד מִן הַשָּׁמַיִם',a:'גֶּשֶׁם',o:['גֶּשֶׁם','שֶׁמֶשׁ','רוּחַ']},
+    {s:'כַּדּוּר הָאָרֶץ מְכֻסֶּה בְּ___',a:'מַיִם',o:['מַיִם','אֲוִיר','חוֹל']},
+    {s:'הָעֵצִים נוֹתְנִים ___ לִנְשֹׁם',a:'אֲוִיר',o:['אֲוִיר','מַיִם','אֹכֶל']},
+    {s:'הֶהָרִים מְכֻסִּים בְּ___ בַּחֹרֶף',a:'שֶׁלֶג',o:['שֶׁלֶג','חוֹל','עֵשֶׂב']},
+    {s:'כַּדּוּר הָאָרֶץ שֶׁלָּנוּ הוּא ___',a:'יָפֶה',o:['יָפֶה','מְכֹעָר','עָצוּב']},
+    {s:'בַּ___ שׁוֹחִים וְנֶהֱנִים',a:'יָם',o:['יָם','הַר','יַעַר']},
+  ],
+};
+
+const STORIES={
+  family:[
+    {st:'בְּכָל עֶרֶב שַׁבָּת, אִמָּא מְבַשֶּׁלֶת מָרָק וּשְׁנִיצֶל. כָּל הַמִּשְׁפָּחָה מְחַכָּה.',q:'מָה מְבַשֶּׁלֶת אִמָּא?',a:'מָרָק וּשְׁנִיצֶל',o:['מָרָק וּשְׁנִיצֶל','פִּיצָּה','עוּגָה']},
+    {st:'בְּיוֹם שִׁישִּׁי יָצְאָה הַמִּשְׁפָּחָה לַפַּרְק. הַיְּלָדִים רָצוּ וְשִׂחֲקוּ. כּוּלָם נֶהֶנוּ.',q:'לְאָן יָצְאָה הַמִּשְׁפָּחָה?',a:'לַפַּרְק',o:['לַפַּרְק','לַיָּם','לַשּׁוּק']},
+    {st:'בַּלַּיְלָה אַבָּא קָרָא סִיפּוּר עַל דְּרָקוֹן שֶׁאָהַב לְשִׁיר. הַיֶּלֶד נִרְדַּם בְּחִיּוּךְ.',q:'מָה עָשָׂה אַבָּא?',a:'קָרָא סִיפּוּר',o:['קָרָא סִיפּוּר','שַׁר שִׁיר','בִּישֵּׁל']},
+    {st:'מָיָה מָלְאָה שֶׁבַע שָׁנִים. כָּל הַמִּשְׁפָּחָה שָׁרָה לָהּ יוֹם הוּלֶּדֶת שָׂמֵחַ.',q:'כַּמָּה שָׁנִים לְמָיָה?',a:'שֶׁבַע',o:['שֶׁבַע','שֵׁשׁ','שְׁמוֹנֶה']},
+    {st:'בַּבֹּקֶר אַבָּא הֵכִין כְּרִיכוֹת עִם גְּבִינָה. הַיְּלָדִים תּוֹדוּ לְאַבָּא.',q:'מָה הֵכִין אַבָּא?',a:'כְּרִיכוֹת',o:['כְּרִיכוֹת','עוּגָה','מָרָק']},
+    {st:'בְּמוֹצָאֵי שַׁבָּת כָּל הַמִּשְׁפָּחָה שִׂחֲקָה קְלָפִים. גַּם סַבָּא וְסַבְתָּא. כּוּלָם צָחֲקוּ.',q:'בְּמָה שִׂחֲקָה הַמִּשְׁפָּחָה?',a:'קְלָפִים',o:['קְלָפִים','כַּדּוּר','פַּזֶּל']},
+  ],
+  space:[
+    {st:'רוֹן חָלַם לִהְיוֹת אַסְטְרוֹנָאוּט. הוּא אָהַב לְהַבִּיט בַּכּוֹכָבִים בַּלַּיְלָה.',q:'מָה חָלַם רוֹן?',a:'אַסְטְרוֹנָאוּט',o:['אַסְטְרוֹנָאוּט','טַיָּס','רוֹפֵא']},
+    {st:'הַיָּרֵחַ הָיָה עָגֹל וְגָדוֹל. כּוֹכָבִים רַבִּים נִצְנְצוּ סְבִיבוֹ. זֶה הָיָה נוֹף יָפֶה.',q:'אֵיךְ הָיָה הַיָּרֵחַ?',a:'עָגֹל וְגָדוֹל',o:['עָגֹל וְגָדוֹל','קָטָן','שָׁטוּחַ']},
+    {st:'הַשֶּׁמֶשׁ הִיא כּוֹכַב בּוֹעֵר גָּדוֹל. בְּלַעֲדֶיהָ לֹא הָיוּ חַיִּים עַל הָאָרֶץ.',q:'מַה הַשֶּׁמֶשׁ?',a:'כּוֹכַב בּוֹעֵר',o:['כּוֹכַב בּוֹעֵר','כּוֹכַב לָכֶת','יָרֵחַ']},
+    {st:'הָרָקֶטָה סָפְרָה לְאָחוֹר: שָׁלוֹשׁ, שְׁתַּיִם, אֶחָד — וְעָפָה לַמָּרוֹם!',q:'לְאָן עָפָה הָרָקֶטָה?',a:'לַמָּרוֹם',o:['לַמָּרוֹם','לַיָּם','לָהָר']},
+    {st:'בַּחָלָל אֵין כֹּבֶד. לָכֵן הָאַסְטְרוֹנָאוּטִים צָפִים כְּמוֹ בְּמַיִם.',q:'מָדוּעַ צָפִים הָאַסְטְרוֹנָאוּטִים?',a:'כִּי אֵין כֹּבֶד',o:['כִּי אֵין כֹּבֶד','כִּי הֵם חָזָקִים','כִּי יֵשׁ מַיִם']},
+    {st:'מֵהַחָלָל כַּדּוּר הָאָרֶץ נִרְאֶה כָּחֹל וְיָרֹק. הַכָּחֹל יָם, הַיָּרֹק יַבָּשָׁה.',q:'אֵיזֶה צֶבַע הוּא הַיָּם?',a:'כָּחֹל',o:['כָּחֹל','יָרֹק','אָדֹם']},
+  ],
+  earth:[
+    {st:'הַנָּהָר זוֹרֵם מֵהֶהָרִים אֶל הַיָּם. בְּדַרְכּוֹ עוֹבֵר בְּשָׂדוֹת וִיעָרוֹת.',q:'לְאָן זוֹרֵם הַנָּהָר?',a:'לַיָּם',o:['לַיָּם','לַמִּדְבָּר','לָהָר']},
+    {st:'בַּיַּעַר גְּדֵלִים עֵצִים גְּבוֹהִים. הֵם נוֹתְנִים אֲוִיר לִנְשֹׁם. חָשׁוּב לִשְׁמֹר עַל הַיְּעָרוֹת.',q:'מָה נוֹתְנִים הָעֵצִים?',a:'אֲוִיר לִנְשֹׁם',o:['אֲוִיר לִנְשֹׁם','מַיִם','לֶחֶם']},
+    {st:'אַחֲרֵי הַגֶּשֶׁם בָּא קֶשֶׁת בָּעָנָן עִם שִׁבְעָה צְבָעִים יָפִים.',q:'כַּמָּה צְבָעִים לַקֶּשֶׁת?',a:'שִׁבְעָה',o:['שִׁבְעָה','חֲמִישָּׁה','עֲשָׂרָה']},
+    {st:'בַּחֹרֶף הֶהָרִים מְכֻסִּים שֶׁלֶג לָבָן. הַשֶּׁלֶג רַךְ וְקַר. יְלָדִים אוֹהֲבִים לְשַׂחֵק בּוֹ.',q:'מָה מְכַסֶּה אֶת הֶהָרִים?',a:'שֶׁלֶג',o:['שֶׁלֶג','חוֹל','עֵשֶׂב']},
+    {st:'הַמִּדְבָּר חַם וְיָבֵשׁ. יֵשׁ הַרְבֵּה חוֹל וּמְעַט מַיִם.',q:'אֵיךְ הַמִּדְבָּר?',a:'חַם וְיָבֵשׁ',o:['חַם וְיָבֵשׁ','קַר וְרָטֹב','כָּחֹל']},
+    {st:'הַפַּרְפָּרִים טָסִים מִפֶּרַח לְפֶרַח וְיוֹנְקִים מֶתֶק. הֵם עוֹזְרִים לַפְּרָחִים.',q:'מָה אוֹכְלִים הַפַּרְפָּרִים?',a:'מֶתֶק מִפְּרָחִים',o:['מֶתֶק מִפְּרָחִים','עֵשֶׂב','חֶרְקִים']},
+  ],
+  israel:[
+    {st:'בְּעֶרֶב שַׁבָּת מַדְלִיקִים נֵרוֹת שַׁבָּת. זֶה מְסַמֵּל שֶׁהַשַּׁבָּת הִתְחִילָה.',q:'מָתַי מַדְלִיקִים נֵרוֹת?',a:'בְּעֶרֶב שַׁבָּת',o:['בְּעֶרֶב שַׁבָּת','בְּכָל לַיְלָה','בַּבֹּקֶר']},
+    {st:'יְרוּשָׁלַיִם הִיא עִיר הַבִּירָה שֶׁל יִשְׂרָאֵל. הִיא עִיר עַתִּיקָה וּקְדוֹשָׁה.',q:'מַהִי עִיר הַבִּירָה?',a:'יְרוּשָׁלַיִם',o:['יְרוּשָׁלַיִם','תֵּל-אָבִיב','חֵיפָה']},
+    {st:'בְּה׳ אִיָּר חוֹגְגִים יוֹם הָעַצְמָאוּת. יֵשׁ זִקּוּקִים וְשִׂמְחָה.',q:'מָה חוֹגְגִים בְּה׳ אִיָּר?',a:'יוֹם הָעַצְמָאוּת',o:['יוֹם הָעַצְמָאוּת','יוֹם הוּלֶּדֶת','פֶּסַח']},
+    {st:'בְּחַג הַפֶּסַח אוֹכְלִים מַצָּה וּמְסַפְּרִים עַל יְצִיאַת מִצְרַיִם.',q:'מָה אוֹכְלִים בְּפֶסַח?',a:'מַצָּה',o:['מַצָּה','לֶחֶם','עוּגָה']},
+    {st:'יַם הַמֶּלַח הוּא הַמָּקוֹם הַנָּמוּךְ בְּיוֹתֵר. יֵשׁ בּוֹ הַרְבֵּה מֶלַח וְכָל אֶחָד יָכוֹל לָצוּף.',q:'מָדוּעַ צָפִים בְּיַם הַמֶּלַח?',a:'כִּי יֵשׁ הַרְבֵּה מֶלַח',o:['כִּי יֵשׁ הַרְבֵּה מֶלַח','כִּי הַמַּיִם חַמִּים','כִּי הַיָּם רָדוּד']},
+    {st:'חוֹף הַיָּם בְּתֵל-אָבִיב יָפֶה. הַיָּם נִקְרָא הַיָּם הַתִּיכוֹן.',q:'אֵיזֶה יָם בְּתֵל-אָבִיב?',a:'הַיָּם הַתִּיכוֹן',o:['הַיָּם הַתִּיכוֹן','יַם הַמֶּלַח','יַם סוּף']},
+  ],
+  animals:[
+    {st:'הָאַרְיֵה הוּא מֶלֶךְ הַחַיּוֹת. יֵשׁ לוֹ רָעָמָה גְּדוֹלָה. הוּא חַי בַּסַּוָּנָה.',q:'מַה הָאַרְיֵה?',a:'מֶלֶךְ הַחַיּוֹת',o:['מֶלֶךְ הַחַיּוֹת','בַּעַל הַיָּם','מֶלֶךְ הַיַּעַר']},
+    {st:'לַפִּיל יֵשׁ חֶדֶק אָרֹךְ לִשְׁתּוֹת מַיִם וְלֶאֱסֹף אֹכֶל.',q:'לְמָה הַפִּיל מִשְׁתַּמֵּשׁ בַּחֶדֶק?',a:'לִשְׁתּוֹת וְלֶאֱסֹף',o:['לִשְׁתּוֹת וְלֶאֱסֹף','לָרוּץ','לִישֹׁן']},
+    {st:'הַדָּג חַי בַּיָּם. יֵשׁ לוֹ סְנַפִּירִים לָנוּעַ. יֵשׁ דָּגִים קְטַנִּים וְגָדוֹלִים.',q:'הֵיכָן חַי הַדָּג?',a:'בַּיָּם',o:['בַּיָּם','בַּיַּעַר','בַּמִּדְבָּר']},
+    {st:'הַכֶּלֶב הוּא חֲבֵרוֹ הַטּוֹב שֶׁל הָאָדָם. הוּא נֶאֱמָן וְאוֹהֵב לְשַׂחֵק.',q:'אֵיךְ הַכֶּלֶב?',a:'נֶאֱמָן',o:['נֶאֱמָן','פַּחְדָן','עָצֵל']},
+    {st:'בַּחֹרֶף עוֹפוֹת רַבִּים טָסִים לְמָקוֹם חַם. זֶה נִקְרָא נְדִידַת עוֹפוֹת.',q:'לְאָן טָסִים הָעוֹפוֹת?',a:'לְמָקוֹם חַם',o:['לְמָקוֹם חַם','לְמָקוֹם קַר','הֵם לֹא טָסִים']},
+    {st:'הַצָּב אִטִּי אֲבָל בַּסִּיפּוּר הַמְּפֻרְסָם נִצַּח אֶת הָאַרְנָב כִּי לֹא וִיתֵּר.',q:'מִי נִצַּח בַּמֵּרוֹץ?',a:'הַצָּב',o:['הַצָּב','הָאַרְנָב','הַשּׁוּעָל']},
+  ],
+  dinos:[
+    {st:'הַטִּי-רֶקְס הָיָה דִּינוֹזָאוּר גָּדוֹל עִם שִׁינַּיִם חַדּוֹת.',q:'מַה הָיָה לְטִי-רֶקְס?',a:'שִׁינַּיִם חַדּוֹת',o:['שִׁינַּיִם חַדּוֹת','כְּנָפַיִם','חֶדֶק']},
+    {st:'הַבְּרוֹנְטוֹסָאוּרוּס הָיָה עִם צַוַּאר אָרֹךְ. הוּא אָכַל עָלִים מֵעֵצִים גְּבוֹהִים.',q:'מָה אָכַל?',a:'עָלִים מֵעֵצִים',o:['עָלִים מֵעֵצִים','בָּשָׂר','דָּגִים']},
+    {st:'הַטְּרִיצֶרָטוֹפְּס הָיָה עִם שְׁלוֹשָׁה קַרְנַיִם. הַקַּרְנַיִם הֵגֵנּוּ עָלָיו.',q:'כַּמָּה קַרְנַיִם?',a:'שָׁלוֹשׁ',o:['שָׁלוֹשׁ','שְׁתַּיִם','אַרְבַּע']},
+    {st:'הַפְּטֶרוֹדַקְטִיל הָיָה דִּינוֹזָאוּר שֶׁיָּכוֹל לָעוּף! לוֹ הָיוּ כְּנָפַיִם גְּדוֹלוֹת.',q:'מָה מְיֻחָד?',a:'הוּא יָכוֹל לָעוּף',o:['הוּא יָכוֹל לָעוּף','הוּא גָּר בַּיָּם','הוּא קָטָן']},
+    {st:'הַסְּטֶגּוֹסָאוּרוּס הָיָה עִם לוּחוֹת עַל הַגַּב. הוּא אָכַל עֲשָׂבִים.',q:'מָה אָכַל?',a:'עֲשָׂבִים',o:['עֲשָׂבִים','בָּשָׂר','דָּגִים']},
+    {st:'לִפְנֵי 66 מִילְיוֹן שָׁנָה הַדִּינוֹזָאוּרִים נֶעֶלְמוּ. אֶבֶן גְּדוֹלָה נָפְלָה מֵהַחָלָל.',q:'מַה קָרָה?',a:'הֵם נֶעֶלְמוּ',o:['הֵם נֶעֶלְמוּ','הֵם חַיִּים','הֵם עָפוּ לַחָלָל']},
+  ],
+};
+const MEM_THEMES={
+  animals:['🦁','🐯','🦊','🐻','🐼','🦋','🐬','🦅','🦒','🐘','🦓','🦛','🐆','🦀','🦞'],
+  food:   ['🍕','🍔','🍟','🌮','🍜','🍦','🍰','🎂','🍩','🍪','🍇','🍓','🍊','🍋','🍍'],
+  space:  ['🚀','🌟','⭐','🌙','☀️','🪐','🛸','🌠','⚡','🌈','🔭','🌍','🌕','💫','🌌'],
+  sports: ['⚽','🏀','🎾','🏈','⚾','🏐','🎱','🏓','🎯','🥊','🏆','🥋','🎿','🏊','🎣'],
+  dinos:  ['🦕','🦖','🐊','🦎','🐢','🦴','🗿','🌋','🔥','💎','🌿','🌳','🥚','🏔️','🌄'],
+};
+const MEM_COLS={4:2,8:4,16:4,20:5,30:6};
+const MILL_Q=[
+  {q:'מָה הַחַיָּה שֶׁנּוֹבַחַת?',a:'כֶּלֶב',o:['כֶּלֶב','חָתוּל','פָּרָה','דָּג'],g:1},
+  {q:'אֵיפֹה גָּר הַדָּג?',a:'בַּיָּם',o:['בַּיָּם','בָּעֵץ','בַּמִּדְבָּר','בָּהָר'],g:1},
+  {q:'מָה צֶבַע הַשָּׁמַיִם בַּיּוֹם?',a:'כָּחֹל',o:['כָּחֹל','אָדֹם','יָרֹק','שָׁחוֹר'],g:1},
+  {q:'מִי מְבַשֵּׁל אֹכֶל?',a:'אִמָּא',o:['אִמָּא','הַכֶּלֶב','הַמְּכוֹנִית','הָרוּחַ'],g:1},
+  {q:'מָה עוֹשִׂים בַּלַּיְלָה?',a:'יְשֵׁנִים',o:['יְשֵׁנִים','שׁוֹחִים','רָצִים','אוֹפִים'],g:1},
+  {q:'מָה מֵאִיר בַּשָּׁמַיִם בַּיּוֹם?',a:'הַשֶּׁמֶשׁ',o:['הַשֶּׁמֶשׁ','הַיָּרֵחַ','הַכּוֹכָב','הֶעָנָן'],g:2},
+  {q:'אֵיזֶה כְּלִי טָס לַחָלָל?',a:'רָקֶטָה',o:['רָקֶטָה','מְטוֹסָן','סִירָה','מְכוֹנִית'],g:2},
+  {q:'מָה צֶבַע הָעֵשֶׂב?',a:'יָרֹק',o:['יָרֹק','כָּחֹל','אָדֹם','שָׁחוֹר'],g:2},
+  {q:'מָה יוֹרֵד מֵהַשָּׁמַיִם בַּחֹרֶף?',a:'גֶּשֶׁם',o:['גֶּשֶׁם','אֶבֶן','מַמְתָּקִים','כּוֹכָבִים'],g:2},
+  {q:'מָהִי עִיר הַבִּירָה שֶׁל יִשְׂרָאֵל?',a:'יְרוּשָׁלַיִם',o:['יְרוּשָׁלַיִם','תֵּל-אָבִיב','חֵיפָה','אֵילַת'],g:2},
+  {q:'מָה הַחַיָּה הַגְּדוֹלָה בְּיוֹתֵר עַל הַיַּבָּשָׁה?',a:'פִּיל',o:['פִּיל','אַרְיֵה','זֶבְרָה','נָחָשׁ'],g:3},
+  {q:'כַּמָּה רַגְלַיִם לָעַכָּבִישׁ?',a:'8',o:['8','6','4','10'],g:3},
+  {q:'כַּמָּה כּוֹכְבֵי לֶכֶת בְּמַעֲרֶכֶת הַשֶּׁמֶשׁ?',a:'8',o:['8','9','7','10'],g:3},
+  {q:'מָה שֵׁם הַכּוֹכָב הָאָדֹם?',a:'מַאְדִּים',o:['מַאְדִּים','צֶדֶק','שַׁבְתַּאי','נוֹגַהּ'],g:3},
+  {q:'מָה הַנָּהָר הַגָּדוֹל בְּיִשְׂרָאֵל?',a:'הַיַּרְדֵּן',o:['הַיַּרְדֵּן','הַנִּילוּס','הָאַמָּזוֹנָס','הָרַיְן'],g:3},
+  {q:'מָתַי קָמָה מְדִינַת יִשְׂרָאֵל?',a:'1948',o:['1948','1967','1920','1956'],g:4},
+  {q:'מָה סֵמֶל מְדִינַת יִשְׂרָאֵל?',a:'מְנוֹרָה',o:['מְנוֹרָה','כּוֹכָב','אֲרִי','יוֹנָה'],g:4},
+  {q:'מָה הַכּוֹכָב הַגָּדוֹל בְּיוֹתֵר?',a:'הַשֶּׁמֶשׁ',o:['הַשֶּׁמֶשׁ','צֶדֶק','שַׁבְתַּאי','אוּרָנוּס'],g:4},
+  {q:'מָה הַיּוֹנֶקֶת הַגְּדוֹלָה בְּיוֹתֵר?',a:'לְוִיָּתָן',o:['לְוִיָּתָן','פִּיל','כְּרִישׁ','צִי'],g:4},
+  {q:'מָה הַחַיָּה הַמְּהִירָה בְּיוֹתֵר?',a:'נָמֵר צַיִד',o:['נָמֵר צַיִד','אַרְיֵה','סוּס','נֵשֶׁר'],g:4},
+  {q:'מָהוּ הַהַר הַגָּבוֹהַּ בְּיוֹתֵר?',a:'אֶוֶרֶסְט',o:['אֶוֶרֶסְט','קִילִימַנְגָ׳רוֹ','הָאַלְפִּים','הִימָלַיָּה'],g:5},
+  {q:'כַּמָּה יַבָּשׁוֹת בָּעוֹלָם?',a:'7',o:['7','5','6','8'],g:5},
+  {q:'כַּמָּה זְמַן לוֹקֵחַ לָאוֹר מֵהַשֶּׁמֶשׁ לָאָרֶץ?',a:'8 דַּקּוֹת',o:['8 דַּקּוֹת','8 שָׁעוֹת','8 שְׁנִיּוֹת','8 יָמִים'],g:5},
+  {q:'אֵיזוֹ עִיר יִשְׂרָאֵלִית עַל יַם סוּף?',a:'אֵילַת',o:['אֵילַת','חֵיפָה','נְתַנְיָה','אַשְׁדּוֹד'],g:5},
+  {q:'מָה שֵׁם הַגָּלַקְסְיָה שֶׁלָּנוּ?',a:'שְׁבִיל הֶחָלָב',o:['שְׁבִיל הֶחָלָב','אַנְדְּרוֹמֶדָה','כּוֹכַב לָכֶת','הֶלְיָאן'],g:5},
+];
+const MILL_PRIZES=[100,200,500,1000,2000,5000,10000,25000,50000,100000,250000,500000,1000000];
+const MILL_SAFE=[4,9];
+const POWERUPS=[
+  {id:'shield', ico:'🛡️',name:'מָגֵן',      desc:'סוֹפֵג פְּגִיעָה אַחַת'},
+  {id:'speed',  ico:'⚡', name:'מְהִירוּת', desc:'יְרִיּוֹת מְהִירוֹת'},
+  {id:'bomb',   ico:'💣', name:'פְּצָצָה',  desc:'נִקּוּי כָּל הַמָּסָךְ'},
+  {id:'life',   ico:'❤️', name:'חַיִּים',   desc:'חַיִּים נוֹסָפִים'},
+  {id:'dfire',  ico:'🔥', name:'אֵשׁ כְּפוּלָה',desc:'שְׁנֵי כַּדּוּרִים'},
+  {id:'slow',   ico:'🌀', name:'זְמַן אִטִּי',desc:'אוֹיְבִים אִטִּיִּים'},
+  {id:'aim',    ico:'🎯', name:'כִּוּוּן',   desc:'כַּדּוּרִים מְחַפְּשִׂים'},
+  {id:'heal',   ico:'💊', name:'רִפּוּי',    desc:'מַחְזִיר חַיִּים'},
+  {id:'missile',ico:'🚀', name:'טִיל',       desc:'נֶזֶק גָּדוֹל'},
+  {id:'star',   ico:'⭐', name:'כּוֹכָב',   desc:'בִּלְתִּי מְנֻצָּח'},
+];
+
+// STATE
+const S={
+  name:'',gender:'m',charId:'sonic',
+  subject:null,category:null,
+  exercises:[],idx:0,attempts:0,exStars:[],
+  sessions:parseInt(localStorage.getItem('lrn_sessions')||'0'),
+  cycleStudy:parseInt(localStorage.getItem('lrn_cycleStudy')||'0'),
+  cycleGames:parseInt(localStorage.getItem('lrn_cycleGames')||'0'),
+};
+function gamesUnlocked(){return S.cycleStudy>=5&&S.cycleGames<2}
+function g(m,f){return S.gender==='f'?f:m}
+function ri(lo,hi){return lo+Math.floor(Math.random()*(hi-lo+1))}
+function shuf(a){const b=[...a];for(let i=b.length-1;i>0;i--){const j=ri(0,i);[b[i],b[j]]=[b[j],b[i]]}return b}
+
+// NAVIGATION
+function nav(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+  if(id==='home')updateHome();
+}
+
+// NAME SCREEN
+const ni=document.getElementById('nameInput');
+ni.addEventListener('input',()=>{document.getElementById('nameNextBtn').disabled=ni.value.trim().length<1||!S.gender;});
+function selGender(gv){
+  S.gender=gv;
+  document.getElementById('gb-boy').classList.toggle('sel',gv==='m');
+  document.getElementById('gb-girl').classList.toggle('sel',gv==='f');
+  document.getElementById('nameNextBtn').disabled=ni.value.trim().length<1;
+}
+function goToChar(){
+  S.name=ni.value.trim();
+  document.getElementById('charTitle').textContent=`${S.name}, בְּחַר אֶת הַדְּמוּת שֶׁ${g('לְּךָ','לָּךְ')}!`;
+  buildCharGrid();nav('char');
+}
+
+// CHARACTER SELECTION
+function buildCharGrid(){
+  const grid=document.getElementById('charGrid');
+  grid.innerHTML=CHARS.map(c=>`
+    <div class="char-card ${S.charId===c.id?'sel':''}" id="cc-${c.id}" onclick="pickChar('${c.id}')">
+      <img src="${c.img}" alt="${c.name}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="char-fallback">${c.fb}</div>
+    </div>`).join('');
+}
+function pickChar(id){
+  S.charId=id;
+  document.querySelectorAll('.char-card').forEach(c=>c.classList.remove('sel'));
+  document.getElementById('cc-'+id).classList.add('sel');
+  document.getElementById('charOkBtn').disabled=false;
+}
+function confirmChar(){
+  const c=CHARS.find(c=>c.id===S.charId);
+  const img=document.getElementById('charImg');
+  const emo=document.getElementById('charEmoji');
+  img.style.display='';
+  emo.style.display='none';
+  emo.textContent=c.fb;
+  img.src=c.img;
+  document.getElementById('charWrap').style.display='flex';
+  nav('home');
+  say(`שָׁלוֹם ${S.name}! אֲנִי ${c.name}! בּוֹאוּ נִלְמַד יַחַד! 🌟`,'happy');
+}
+function changeChar(){buildCharGrid();nav('char');}
+
+// HOME
+function updateHome(){
+  document.getElementById('homeWelcome').textContent=`שָׁלוֹם, ${S.name}! 👋`;
+  const unlocked=gamesUnlocked();
+  const btn=document.getElementById('gamesBtn');
+  btn.className='subj-btn '+(unlocked?'games-btn':'games-locked');
+  document.getElementById('gamesIco').textContent=unlocked?'🎮':'🔒';
+  document.getElementById('gamesBtnLbl').textContent=unlocked?'מִשְׂחָקִים':'מִשְׂחָקִים נְעוּלִים';
+  const remain=5-S.cycleStudy;
+  document.getElementById('gamesSmLbl').textContent=unlocked?`נוֹתְרוּ ${2-S.cycleGames} מִשְׂחָקִים`:`עוֹד ${remain} שְׁלָבִים`;
+  const info=document.getElementById('sessionInfo');
+  if(unlocked){
+    info.textContent=`🎮 ${2-S.cycleGames} מִשְׂחָקִים לְפָנֶיךָ!`;
+    document.getElementById('cycleLabel').textContent='';
+    document.getElementById('cycleFill').style.width='100%';
+  }else{
+    info.textContent=`📊 הַשְׁלֵם עוֹד ${remain} שְׁלָבִים לִפְתֹּחַ מִשְׂחָקִים`;
+    document.getElementById('cycleLabel').textContent=`${S.cycleStudy}/5 שְׁלָבִים הוּשְׁלְמוּ`;
+    document.getElementById('cycleFill').style.width=(S.cycleStudy/5*100)+'%';
+  }
+  // update games hub sub text
+  const gh=document.getElementById('gamesHubSub');
+  if(gh){
+    const left=2-S.cycleGames;
+    gh.textContent=left===2?'יֵשׁ לְךָ 2 מִשְׂחָקִים! כָּל הַכָּבוֹד! 🏆':`נוֹתַר לְךָ מִשְׂחָק ${left}!`;
+  }
+  const gl=document.getElementById('gamesLeftInfo');
+  if(gl){const left=2-S.cycleGames;gl.textContent=left>0?`נוֹתְרוּ ${left} מִשְׂחָקִים`:'משחקים נגמרו – למד עוד כדי לפתוח!';}
+}
+function tryGames(){
+  if(gamesUnlocked())nav('games');
+  else say(`עוֹד ${5-S.cycleStudy} שְׁלָבִים וּפוֹתְחִים מִשְׂחָקִים! ${S.name} ${g('אַתָּה','אַתְּ')} יָכוֹל!`,'oops');
+}
+function gameCompleted(){
+  if(!gamesUnlocked())return;
+  S.cycleGames++;
+  if(S.cycleGames>=2){S.cycleStudy=0;S.cycleGames=0;localStorage.setItem('lrn_cycleStudy','0');localStorage.setItem('lrn_cycleGames','0');}
+  else{localStorage.setItem('lrn_cycleGames',S.cycleGames);}
+}
+
+// MATH
+function genMath(diff){
+  let a,b,op,ans,tries=0;
+  do{
+    if(diff==='easy'){a=ri(1,9);b=ri(0,9);op=Math.random()>.4?'+':'-';}
+    else if(diff==='med'){op=Math.random()>.4?'+':'-';a=ri(5,15);b=ri(2,10);}
+    else{op=Math.random()>.4?'+':'-';a=ri(10,65);b=ri(5,40);}
+    if(op==='-'&&a<b)[a,b]=[b,a];
+    ans=op==='+'?a+b:a-b;tries++;
+  }while((ans<0||ans>100)&&tries<50);
+  const wr=new Set();
+  while(wr.size<2){const w=ans+(Math.random()>.5?1:-1)*ri(1,6);if(w!==ans&&w>=0&&w<=100)wr.add(w);}
+  return{type:'math',a,b,op,ans,opts:shuf([ans,...wr])};
+}
+function startMath(diff){S.subject='math';S.category=diff;S.exercises=Array.from({length:5},()=>genMath(diff));beginSession();}
+function startHeb(cat){S.subject='heb';S.category=cat;S.exercises=shuf([...HEB[cat]]).slice(0,5).map(e=>({...e,type:'heb'}));beginSession();}
+function startStory(cat){S.subject='story';S.category=cat;S.exercises=shuf([...STORIES[cat]]).slice(0,5).map(e=>({...e,type:'story'}));beginSession();}
+function backFromEx(){nav(S.subject==='math'?'math-cat':S.subject==='heb'?'heb-cat':'story-cat')}
+
+// SESSION
+function beginSession(){S.idx=0;S.attempts=0;S.exStars=[];nav('ex');renderEx();charEncouragement();}
+
+function renderEx(){
+  const ex=S.exercises[S.idx];
+  S.attempts=0;
+  document.getElementById('progFill').style.width=(S.idx/5*100)+'%';
+  document.getElementById('exNum').textContent=`תַּרְגִּיל ${S.idx+1} מִתּוֹךְ 5`;
+  renderStars(5);
+  const content=document.getElementById('exContent');
+  const answers=document.getElementById('exAnswers');
+  if(ex.type==='math'){
+    content.innerHTML=`<div class="math-row"><div class="nb">${ex.a}</div><div class="ob">${ex.op}</div><div class="nb">${ex.b}</div><div class="eq">=</div><div class="qb">?</div></div>`;
+    answers.innerHTML=ex.opts.map(o=>`<button class="ans-btn" onclick="chk(this,'${o}','${ex.ans}')">${o}</button>`).join('');
+  }else if(ex.type==='heb'){
+    const disp=ex.s.replace('___',`<span class="blank">___</span>`);
+    content.innerHTML=`<div class="heb-s">${disp}</div>`;
+    answers.innerHTML=shuf(ex.o).map(o=>`<button class="ans-btn" onclick="chk(this,\`${o}\`,\`${ex.a}\`)">${o}</button>`).join('');
+  }else{
+    content.innerHTML=`<div class="story-box">${ex.st}</div><div class="story-q">${ex.q}</div>`;
+    answers.innerHTML=shuf(ex.o).map(o=>`<button class="ans-btn" onclick="chk(this,\`${o}\`,\`${ex.a}\`)">${o}</button>`).join('');
+  }
+  setTimeout(charEncouragement,400);
+}
+function renderStars(n){document.getElementById('liveStars').innerHTML=Array(5).fill(0).map((_,i)=>`<span class="star ${i<n?'on':''}">⭐</span>`).join('');}
+
+function chk(btn,chosen,correct){
+  document.querySelectorAll('.ans-btn').forEach(b=>b.disabled=true);
+  const ok=String(chosen).trim()===String(correct).trim();
+  if(ok){
+    btn.classList.add('correct');
+    const earned=Math.max(1,5-S.attempts);
+    S.exStars.push(earned);renderStars(earned);
+    const msgs=CMSG[S.charId].w;
+    say(`${msgs[ri(0,msgs.length-1)]} ${earned===5?'🌟':'👏'}`,'happy');
+    setTimeout(()=>{S.idx++;if(S.idx>=5)showResult();else renderEx();},1600);
+  }else{
+    btn.classList.add('wrong');S.attempts++;
+    renderStars(Math.max(1,5-S.attempts));
+    const msgs=CMSG[S.charId].f;
+    say(msgs[ri(0,msgs.length-1)],'oops');
+    setTimeout(()=>{btn.classList.remove('wrong');document.querySelectorAll('.ans-btn').forEach(b=>{if(!b.classList.contains('correct'))b.disabled=false;});},650);
+  }
+}
+function askHelp(){say(`${S.name}, קְרָא לְאַבָּא אוֹ לְאִמָּא שֶׁיַּעַזְרוּ! 👨‍👩‍👦`,'oops')}
+
+// RESULT
+function showResult(){
+  S.sessions++;
+  if(S.cycleStudy<5)S.cycleStudy++;
+  localStorage.setItem('lrn_sessions',S.sessions);
+  localStorage.setItem('lrn_cycleStudy',S.cycleStudy);
+  const tot=S.exStars.reduce((s,n)=>s+n,0);
+  nav('result');
+  document.getElementById('progFill').style.width='100%';
+  document.getElementById('resTot').textContent=`${tot} ⭐ מִתּוֹךְ 25`;
+  let emoji,title,sub;
+  if(tot>=23){emoji='🏆';title=`מַמָּשׁ מְדַהִים ${S.name}!`;sub=`${g('אַתָּה','אַתְּ')} ${g('אַלּוּף','אַלּוּפָה')} אֲמִיתִּי${g('','ת')}!`;}
+  else if(tot>=15){emoji='🌟';title=`כָּל הַכָּבוֹד ${S.name}!`;sub='עָשִׂיתָ עֲבוֹדָה טוֹבָה מְאוֹד!';}
+  else{emoji='💪';title=`יוֹפִי שֶׁנִּסִּיתָ ${S.name}!`;sub='בַּפַּעַם הַבָּאָה תַּצְלִיחַ עוֹד יוֹתֵר!';}
+  document.getElementById('resEmoji').textContent=emoji;
+  document.getElementById('resTitle').textContent=title;
+  document.getElementById('resSub').textContent=sub;
+  const justUnlocked=S.cycleStudy>=5&&S.cycleGames===0;
+  const msgs=CMSG[S.charId].w;
+  say(msgs[ri(0,msgs.length-1)]+(justUnlocked?' 🎮 פָּתַחְתָּ מִשְׂחָקִים!':''),'happy');
+  document.getElementById('resList').innerHTML=S.exStars.map((n,i)=>`
+    <div class="brow"><span style="font-size:16px;font-weight:700">תַּרְגִּיל ${i+1}</span>
+    <div>${Array(5).fill(0).map((_,j)=>`<span style="font-size:20px;opacity:${j<n?1:.18}">⭐</span>`).join('')}</div></div>`).join('');
+}
+function playAgain(){
+  if(S.subject==='math')S.exercises=Array.from({length:5},()=>genMath(S.category));
+  else if(S.subject==='heb')S.exercises=shuf([...HEB[S.category]]).slice(0,5).map(e=>({...e,type:'heb'}));
+  else S.exercises=shuf([...STORIES[S.category]]).slice(0,5).map(e=>({...e,type:'story'}));
+  S.idx=0;S.attempts=0;S.exStars=[];nav('ex');renderEx();
+}
+
+// SAY
+let sayTimer;
+function say(msg,mood){
+  const b=document.getElementById('bubble');
+  const img=document.getElementById('charImg');
+  const emo=document.getElementById('charEmoji');
+  b.textContent=msg;b.classList.add('show');
+  // animate whichever is visible
+  const active=img.style.display!=='none'?img:emo;
+  active.className=img===active?'char-img':'char-emoji';
+  void active.offsetWidth;
+  if(mood==='happy')active.classList.add('happy');
+  else if(mood==='oops')active.classList.add('oops');
+  clearTimeout(sayTimer);
+  sayTimer=setTimeout(()=>{b.classList.remove('show');active.className=img===active?'char-img':'char-emoji';},4500);
+}
+function charEncouragement(){const msgs=CMSG[S.charId].e;say(`${S.name}, ${msgs[ri(0,msgs.length-1)]}`,'idle');}
+
+// MEMORY GAME
+let memCfg={count:4,theme:'animals'};
+let memState={cards:[],flipped:[],matched:0,moves:0,lock:false,total:0};
+
+function selMO(key,val,btn){
+  memCfg[key]=val;
+  btn.parentElement.querySelectorAll('.opt-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+}
+function startMemory(){
+  nav('memory');
+  document.getElementById('memWin').style.display='none';
+  const count=memCfg.count;
+  const theme=MEM_THEMES[memCfg.theme]||MEM_THEMES.animals;
+  const numPairs=count/2;
+  const emojis=shuf([...theme]).slice(0,numPairs);
+  const pairs=shuf([...emojis,...emojis]);
+  const cols=MEM_COLS[count]||4;
+  memState={cards:pairs.map((e,i)=>({e,i,f:false,m:false})),flipped:[],matched:0,moves:0,lock:false,total:count};
+  document.getElementById('memMoves').textContent='מַהֲלָכִים: 0';
+  const grid=document.getElementById('memGrid');
+  grid.style.gridTemplateColumns=`repeat(${cols},1fr)`;
+  // font size based on count
+  const fs=count<=8?'32px':count<=16?'26px':count<=20?'22px':'18px';
+  grid.innerHTML=pairs.map((_,i)=>`
+    <div class="mem-card" id="mc${i}" onclick="flipCard(${i})" style="font-size:${fs}">
+      <div class="front">❓</div>
+      <div class="back"></div>
+    </div>`).join('');
+}
+function flipCard(i){
+  const ms=memState;
+  if(ms.lock||ms.cards[i].f||ms.cards[i].m)return;
+  ms.cards[i].f=true;
+  const el=document.getElementById('mc'+i);
+  el.classList.add('flipped');
+  el.querySelector('.back').textContent=ms.cards[i].e;
+  ms.flipped.push(i);
+  if(ms.flipped.length===2){
+    ms.moves++;
+    document.getElementById('memMoves').textContent='מַהֲלָכִים: '+ms.moves;
+    ms.lock=true;
+    const [a,b]=ms.flipped;
+    if(ms.cards[a].e===ms.cards[b].e){
+      ms.cards[a].m=ms.cards[b].m=true;
+      document.getElementById('mc'+a).classList.add('matched');
+      document.getElementById('mc'+b).classList.add('matched');
+      ms.matched+=2;ms.flipped=[];ms.lock=false;
+      if(ms.matched===ms.total){
+        document.getElementById('memWin').style.display='block';
+        document.getElementById('memWinMsg').textContent=`כָּל הַכָּבוֹד ${S.name}! ${ms.moves} מַהֲלָכִים!`;
+        say(`וָאוּ ${S.name}! פָּתַרְתָּ אֶת מִשְׂחַק הַזִּיכָּרוֹן! 🃏`,'happy');
+      }
+    }else{
+      setTimeout(()=>{
+        ms.cards[a].f=ms.cards[b].f=false;
+        document.getElementById('mc'+a).classList.remove('flipped');
+        document.getElementById('mc'+b).classList.remove('flipped');
+        ms.flipped=[];ms.lock=false;
+      },900);
+    }
+  }
+}
+
+// SPEED MATH
+let speedCfg={count:10,time:20};
+let spd={q:[],i:0,score:0,timer:null,timeLeft:0,active:false};
+
+function selSO(key,val,btn){
+  speedCfg[key]=val;
+  btn.parentElement.querySelectorAll('.opt-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+}
+function startSpeed(){
+  nav('speed');
+  spd.q=Array.from({length:speedCfg.count},()=>genMath('easy'));
+  spd.i=0;spd.score=0;spd.active=true;
+  document.getElementById('speedEnd').style.display='none';
+  document.getElementById('speedContent').style.display='block';
+  document.getElementById('speedScore').textContent='✓ 0';
+  renderSpeedQ();startSpeedTimer();
+  say(`${S.name}, מָהִיר כְּמוֹ רַעַם! ⚡`,'happy');
+}
+function renderSpeedQ(){
+  const ex=spd.q[spd.i];
+  document.getElementById('speedQNum').textContent=`שְׁאֵלָה ${spd.i+1} מִתּוֹךְ ${speedCfg.count}`;
+  document.getElementById('speedQ').textContent=`${ex.a} ${ex.op} ${ex.b} = ?`;
+  document.getElementById('speedAns').innerHTML=ex.opts.map(o=>`<button class="ans-btn" onclick="speedAns(${o},${ex.ans})" style="font-size:28px">${o}</button>`).join('');
+}
+function speedAns(chosen,correct){
+  if(!spd.active)return;
+  clearInterval(spd.timer);
+  if(chosen===correct){spd.score++;document.getElementById('speedScore').textContent='✓ '+spd.score;}
+  spd.i++;
+  if(spd.i>=speedCfg.count){stopSpeed();return;}
+  renderSpeedQ();startSpeedTimer();
+}
+function startSpeedTimer(){
+  spd.timeLeft=speedCfg.time*10;
+  clearInterval(spd.timer);
+  spd.timer=setInterval(()=>{
+    if(!spd.active){clearInterval(spd.timer);return;}
+    spd.timeLeft--;
+    document.getElementById('speedFill').style.width=(spd.timeLeft/(speedCfg.time*10)*100)+'%';
+    if(spd.timeLeft<=0){spd.i++;if(spd.i>=speedCfg.count){stopSpeed();}else{renderSpeedQ();spd.timeLeft=speedCfg.time*10;}}
+  },100);
+}
+function stopSpeed(){
+  spd.active=false;clearInterval(spd.timer);
+  document.getElementById('speedContent').style.display='none';
+  document.getElementById('speedEnd').style.display='block';
+  const total=Math.min(spd.i||1,speedCfg.count);
+  let msg=spd.score>=total*.8?`מְדַהִים! ${spd.score}/${total} נְכוֹנוֹת! 🏆`:spd.score>=total*.5?`טוֹב מְאוֹד! ${spd.score}/${total}!`:`${spd.score}/${total} נְכוֹנוֹת. תְּנַסֶּה שׁוּב!`;
+  document.getElementById('speedEndMsg').textContent=msg;
+  say(`${S.name}, ${CMSG[S.charId].w[0]}`,'happy');
+}
+
+// TIC-TAC-TOE
+let tttState={board:Array(9).fill(null),current:'X',over:false,mode:'ai'};
+const WIN_LINES=[[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+
+function initTTT(){nav('ttt');tttReset();}
+function tttSetMode(m){
+  tttState.mode=m;
+  document.getElementById('tttVsAI').classList.toggle('sel',m==='ai');
+  document.getElementById('tttVs2P').classList.toggle('sel',m==='2p');
+  tttReset();
+}
+function tttReset(){
+  tttState={board:Array(9).fill(null),current:'X',over:false,mode:tttState.mode};
+  for(let i=0;i<9;i++){const c=document.getElementById('tc'+i);c.textContent='';c.className='ttt-cell';}
+  document.getElementById('tttStatus').textContent=tttState.mode==='ai'?'תּוֹרְךָ! בְּחַר תָּא':'תּוֹר ❌';
+}
+function tttClick(i){
+  const st=tttState;
+  if(st.over||st.board[i])return;
+  if(st.mode==='ai'&&st.current==='O')return;
+  tttPlay(i,st.current);
+  if(!st.over&&st.mode==='ai'&&st.current==='O'){
+    setTimeout(tttAIMove,400);
+  }
+}
+function tttPlay(i,mark){
+  const st=tttState;
+  st.board[i]=mark;
+  const cell=document.getElementById('tc'+i);
+  cell.textContent=mark==='X'?'❌':'⭕';
+  cell.classList.add('taken',mark+'-cell');
+  const win=tttCheck(st.board,mark);
+  if(win){
+    st.over=true;
+    win.forEach(idx=>document.getElementById('tc'+idx).classList.add('win-cell'));
+    if(st.mode==='ai'){
+      document.getElementById('tttStatus').textContent=mark==='X'?`🎉 כָּל הַכָּבוֹד ${S.name}! נִצַּחְתָּ!`:'🤖 הַמַּחְשֵׁב נִצַּח. נְנַסֶּה שׁוּב!';
+    }else{
+      document.getElementById('tttStatus').textContent=`🎉 שַׂחְקָן ${mark==='X'?'❌':'⭕'} נִצַּח!`;
+    }
+    say(mark==='X'&&st.mode==='ai'?`כָּל הַכָּבוֹד ${S.name}! מַמָּשׁ מְדַהִים!`:'טוֹב נִסִּיתָ! עוֹד פַּעַם?',mark==='X'&&st.mode==='ai'?'happy':'oops');
+    return;
+  }
+  if(st.board.every(c=>c)){
+    st.over=true;
+    document.getElementById('tttStatus').textContent='🤝 תִּיקוּ! שׁוּב?';
+    return;
+  }
+  st.current=st.current==='X'?'O':'X';
+  if(st.mode==='ai'){
+    document.getElementById('tttStatus').textContent=st.current==='X'?'תּוֹרְךָ! בְּחַר תָּא':'🤖 הַמַּחְשֵׁב חוֹשֵׁב...';
+  }else{
+    document.getElementById('tttStatus').textContent=`תּוֹר ${st.current==='X'?'❌':'⭕'}`;
+  }
+}
+function tttCheck(board,mark){
+  for(const line of WIN_LINES){if(line.every(i=>board[i]===mark))return line;}
+  return null;
+}
+function tttAIMove(){
+  const st=tttState;if(st.over)return;
+  let best=-Infinity,move=-1;
+  for(let i=0;i<9;i++){
+    if(!st.board[i]){
+      st.board[i]='O';
+      const score=minimax(st.board,0,false);
+      st.board[i]=null;
+      if(score>best){best=score;move=i;}
+    }
+  }
+  if(move>=0)tttPlay(move,'O');
+}
+function minimax(board,depth,isMax){
+  if(tttCheck(board,'O'))return 10-depth;
+  if(tttCheck(board,'X'))return depth-10;
+  if(board.every(c=>c))return 0;
+  if(isMax){
+    let best=-Infinity;
+    for(let i=0;i<9;i++){if(!board[i]){board[i]='O';best=Math.max(best,minimax(board,depth+1,false));board[i]=null;}}
+    return best;
+  }else{
+    let best=Infinity;
+    for(let i=0;i<9;i++){if(!board[i]){board[i]='X';best=Math.min(best,minimax(board,depth+1,true));board[i]=null;}}
+    return best;
+  }
+}
+
+// MILLIONAIRE
+let mill={qList:[],qi:0,ll50:true,llParent:true,llAudience:true,over:false,prizeIdx:0};
+
+function startMillionaire(){
+  nav('millionaire');
+  // Build 12-question game across grade levels
+  const byGrade={1:[],2:[],3:[],4:[],5:[]};
+  MILL_Q.forEach(q=>byGrade[q.g]&&byGrade[q.g].push(q));
+  const game=[];
+  // 3 easy (g1-2), 4 medium (g2-3), 3 hard (g3-4), 2 expert (g4-5)
+  const e1=shuf([...byGrade[1]]).slice(0,2);
+  const e2=shuf([...byGrade[2]]).slice(0,2);
+  const m3=shuf([...byGrade[3]]).slice(0,4);
+  const h4=shuf([...byGrade[4]]).slice(0,3);
+  const x5=shuf([...byGrade[5]]).slice(0,3);
+  game.push(...e1,...e2,...m3,...h4,...x5);
+  mill={qList:game.slice(0,12),qi:0,ll50:true,llParent:true,llAudience:true,over:false,prizeIdx:0};
+  document.getElementById('millEnd').style.display='none';
+  document.getElementById('millAudienceBar').style.display='none';
+  document.getElementById('ll50').disabled=false;
+  document.getElementById('llParent').disabled=false;
+  document.getElementById('llAudience').disabled=false;
+  renderMillQ();
+}
+
+function renderMillQ(){
+  if(mill.qi>=mill.qList.length){millWin();return;}
+  const q=mill.qList[mill.qi];
+  document.getElementById('millQNum').textContent=`שְׁאֵלָה ${mill.qi+1} מִתּוֹךְ ${mill.qList.length}`;
+  document.getElementById('millPrize').textContent=mill.qi<MILL_PRIZES.length?formatNum(MILL_PRIZES[mill.qi])+'₪':'💰';
+  document.getElementById('millQ').textContent=q.q;
+  document.getElementById('millAudienceBar').style.display='none';
+  const labels=['א','ב','ג','ד'];
+  const opts=shuf([...q.o]);
+  mill.currentOpts=opts;
+  mill.currentCorrect=q.a;
+  const container=document.getElementById('millAnswers');
+  container.innerHTML=opts.map((opt,i)=>`<button class="mill-ans" data-idx="${i}">${labels[i]}. ${opt}</button>`).join('');
+  container.querySelectorAll('.mill-ans').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const idx=parseInt(btn.dataset.idx);
+      millAnswer(btn,opts[idx],q.a);
+    });
+  });
+}
+
+function millAnswer(btn,chosen,correct){
+  document.querySelectorAll('.mill-ans').forEach(b=>b.disabled=true);
+  const ok=chosen===correct;
+  btn.classList.add(ok?'correct':'wrong');
+  if(!ok){
+    // highlight correct
+    document.querySelectorAll('.mill-ans').forEach(b=>{
+      if(b.textContent.includes(correct))b.classList.add('correct');
+      else if(!b.classList.contains('wrong'))b.classList.add('faded');
+    });
+  }
+  if(ok){
+    mill.prizeIdx=mill.qi;
+    setTimeout(()=>{
+      mill.qi++;
+      if(mill.qi>=mill.qList.length)millWin();
+      else renderMillQ();
+    },1500);
+    say(`נְכוֹן! מַמָּשׁ מְדַהִים ${S.name}! 🌟`,'happy');
+  }else{
+    setTimeout(()=>{
+      const safe=MILL_SAFE.filter(s=>s<mill.qi);
+      const safePrize=safe.length>0?MILL_PRIZES[safe[safe.length-1]]:0;
+      millEnd(false,safePrize);
+    },1800);
+    say(`אוֹי... לֹא נוֹרָא! תְּנַסֶּה שׁוּב!`,'oops');
+  }
+}
+
+function millWin(){
+  const prize=MILL_PRIZES[mill.qList.length-1];
+  document.getElementById('millEnd').style.display='block';
+  document.getElementById('millEndEmoji').textContent='🏆';
+  document.getElementById('millEndMsg').textContent=`מַזָּל טוֹב! זָכִיתָ בְּ-${formatNum(prize)} ₪! אַתָּה אַלּוּף!`;
+  launchFireworks();
+  say(`${S.name} אַתָּה מִילְיוֹנֵר! 🏆`,'happy');
+}
+function millEnd(won,prize){
+  document.getElementById('millEnd').style.display='block';
+  if(!won){
+    document.getElementById('millEndEmoji').textContent='💔';
+    document.getElementById('millEndMsg').textContent=`אוֹי! יָצָאתָ עִם ${formatNum(prize)} ₪. נְנַסֶּה שׁוּב?`;
+  }
+}
+function formatNum(n){return n.toLocaleString('he-IL');}
+
+function use5050(){
+  if(!mill.ll50)return;
+  mill.ll50=false;
+  document.getElementById('ll50').disabled=true;
+  const q=mill.qList[mill.qi];
+  const btns=[...document.querySelectorAll('.mill-ans')];
+  const wrongBtns=btns.filter(b=>!b.textContent.includes(q.a));
+  const toHide=shuf(wrongBtns).slice(0,2);
+  toHide.forEach(b=>{b.classList.add('faded');b.disabled=true;});
+  say(`50:50 - הֵסַרְתִּי שְׁתֵּי תְּשׁוּבוֹת שְׁגוּיוֹת!`,'happy');
+}
+function useParents(){
+  if(!mill.llParent)return;
+  mill.llParent=false;
+  document.getElementById('llParent').disabled=true;
+  const q=mill.qList[mill.qi];
+  say(`קְרָא לְאַבָּא אוֹ לְאִמָּא לַעֲזוֹר לְךָ! הַתְּשׁוּבָה הִיא: ${q.a} 👨‍👩‍👦`,'happy');
+}
+function useAudience(){
+  if(!mill.llAudience)return;
+  mill.llAudience=false;
+  document.getElementById('llAudience').disabled=true;
+  const q=mill.qList[mill.qi];
+  const btns=[...document.querySelectorAll('.mill-ans')];
+  const opts=btns.map(b=>{
+    const text=b.textContent.replace(/^[א-ד]\.\s*/,'');
+    const isCorrect=text===q.a;
+    const pct=isCorrect?ri(55,75):ri(5,20);
+    return{text,pct};
+  });
+  // normalize
+  const total=opts.reduce((s,o)=>s+o.pct,0);
+  const bar=document.getElementById('millAudienceBar');
+  bar.style.display='block';
+  bar.innerHTML='<div style="font-size:14px;font-weight:700;text-align:center;margin-bottom:8px">👥 דַּעַת הַקָּהָל:</div>'+
+    opts.map(o=>`<div style="margin:4px 0;display:flex;align-items:center;gap:8px;direction:ltr">
+      <div style="min-width:40px;text-align:right;font-size:13px;font-weight:700">${Math.round(o.pct/total*100)}%</div>
+      <div style="flex:1;height:18px;background:rgba(255,255,255,.1);border-radius:4px;overflow:hidden">
+        <div style="height:100%;width:${Math.round(o.pct/total*100)}%;background:var(--bll);border-radius:4px"></div>
+      </div>
+      <div style="min-width:60px;font-size:13px">${o.text}</div>
+    </div>`).join('');
+}
+
+// SPACE SHOOTER
+let shCfg={lives:5,speed:'easy',powerups:[]};
+let sh={ctx:null,raf:null,player:null,bullets:[],enemies:[],ebullets:[],particles:[],powerupItems:[],
+  level:1,lives:5,score:0,bossHP:0,bossMaxHP:0,boss:null,active:false,paused:false,
+  activePU:{shield:false,dfire:false,slow:false,aim:false,star:false},
+  keys:{},touchX:null};
+
+function selShO(key,val,btn){
+  shCfg[key]=val;
+  btn.parentElement.querySelectorAll('.opt-btn').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+}
+function buildPUGrid(){
+  const g=document.getElementById('puGrid');
+  if(!g)return;
+  shCfg.powerups=[];
+  g.innerHTML=POWERUPS.map(p=>`
+    <div class="pu-card" id="pu-${p.id}" onclick="togglePU('${p.id}',this)">
+      <div class="pu-ico">${p.ico}</div>
+      <div>${p.name}</div>
+    </div>`).join('');
+  updatePUCount();
+}
+function togglePU(id,el){
+  const idx=shCfg.powerups.indexOf(id);
+  if(idx>=0){shCfg.powerups.splice(idx,1);el.classList.remove('sel');}
+  else if(shCfg.powerups.length<5){shCfg.powerups.push(id);el.classList.add('sel');}
+  else{say(`אֶפְשָׁר לִבְחֹר עַד 5 כּוֹחוֹת!`,'oops');}
+  updatePUCount();
+}
+function updatePUCount(){document.getElementById('puCount').textContent=`${shCfg.powerups.length}/5`;}
+
+function startShooter(){
+  nav('shooter');
+  const canvas=document.getElementById('shooterCanvas');
+  const ctx=canvas.getContext('2d');
+  // resize canvas to fit
+  const maxW=Math.min(480,window.innerWidth-20);
+  canvas.width=maxW;canvas.height=Math.round(maxW*(520/480));
+  sh.ctx=ctx;sh.level=1;sh.score=0;sh.active=true;sh.paused=false;
+  sh.lives=shCfg.lives;
+  sh.bullets=[];sh.enemies=[];sh.ebullets=[];sh.particles=[];sh.powerupItems=[];
+  sh.boss=null;sh.activePU={shield:shCfg.powerups.includes('shield'),dfire:false,slow:false,aim:false,star:false};
+  sh.keys={};sh.touchX=null;
+  document.getElementById('shOverlay').style.display='none';
+  document.getElementById('shBossHpWrap').style.display='none';
+  shInitPlayer();
+  shStartLevel();
+  // input
+  canvas.onmousedown=e=>{const r=canvas.getBoundingClientRect();sh.touchX=(e.clientX-r.left)*(canvas.width/r.width);};
+  canvas.onmousemove=e=>{if(e.buttons&1){const r=canvas.getBoundingClientRect();sh.touchX=(e.clientX-r.left)*(canvas.width/r.width);}};
+  canvas.onmouseup=()=>{sh.touchX=null;};
+  canvas.ontouchstart=e=>{e.preventDefault();const r=canvas.getBoundingClientRect();const t=e.touches[0];sh.touchX=(t.clientX-r.left)*(canvas.width/r.width);};
+  canvas.ontouchmove=e=>{e.preventDefault();const r=canvas.getBoundingClientRect();const t=e.touches[0];sh.touchX=(t.clientX-r.left)*(canvas.width/r.width);};
+  canvas.ontouchend=()=>{sh.touchX=null;};
+  document.addEventListener('keydown',shKeyDown);
+  document.addEventListener('keyup',shKeyUp);
+  shLoop();
+}
+function shKeyDown(e){sh.keys[e.key]=true;if(e.key===' ')e.preventDefault();}
+function shKeyUp(e){sh.keys[e.key]=false;}
+function shooterStop(){
+  sh.active=false;
+  if(sh.raf){cancelAnimationFrame(sh.raf);sh.raf=null;}
+  document.removeEventListener('keydown',shKeyDown);
+  document.removeEventListener('keyup',shKeyUp);
+}
+
+function shInitPlayer(){
+  const cw=sh.ctx.canvas.width;const ch=sh.ctx.canvas.height;
+  sh.player={x:cw/2,y:ch-60,w:36,h:36,speed:4,shooting:0};
+}
+function shStartLevel(){
+  sh.enemies=[];sh.bullets=[];sh.ebullets=[];sh.powerupItems=[];sh.boss=null;
+  document.getElementById('shBossHpWrap').style.display='none';
+  updateShHUD();
+  if(sh.level===5){shSpawnBoss();}
+  else{
+    // spawn enemies
+    const rows=sh.level+1;const cols=5;
+    const cw=sh.ctx.canvas.width;
+    const spacingX=cw/(cols+1);
+    for(let r=0;r<rows;r++){
+      for(let c=0;c<cols;c++){
+        sh.enemies.push({x:spacingX*(c+1),y:40+r*52,w:32,h:32,alive:true,vy:0.3+sh.level*0.15,phase:Math.random()*Math.PI*2,shootTimer:ri(60,180)});
+      }
+    }
+  }
+}
+function shSpawnBoss(){
+  const cw=sh.ctx.canvas.width;
+  sh.bossMaxHP=30+sh.level*10;sh.bossHP=sh.bossMaxHP;
+  sh.boss={x:cw/2,y:80,w:80,h:60,vx:1.5,alive:true,shootTimer:60,phase:0};
+  document.getElementById('shBossHpWrap').style.display='block';
+  document.getElementById('shBossHp').style.width='100%';
+}
+
+function shLoop(){
+  if(!sh.active){return;}
+  sh.raf=requestAnimationFrame(shLoop);
+  shUpdate();shDraw();
+}
+
+function shUpdate(){
+  const cw=sh.ctx.canvas.width;const ch=sh.ctx.canvas.height;
+  const p=sh.player;
+  // move player
+  let spd=p.speed;
+  if(sh.keys['ArrowLeft']||sh.keys['a'])p.x=Math.max(p.w/2,p.x-spd);
+  if(sh.keys['ArrowRight']||sh.keys['d'])p.x=Math.min(cw-p.w/2,p.x+spd);
+  if(sh.touchX!==null)p.x+=(sh.touchX-p.x)*0.15;
+  p.x=Math.max(p.w/2,Math.min(cw-p.w/2,p.x));
+  // auto-fire
+  p.shooting--;
+  const fireRate=shCfg.powerups.includes('speed')?8:15;
+  if(p.shooting<=0){
+    p.shooting=fireRate;
+    const speed=8;
+    sh.bullets.push({x:p.x,y:p.y-p.h/2,r:5,vy:-speed,alive:true});
+    if(shCfg.powerups.includes('dfire')){
+      sh.bullets.push({x:p.x-10,y:p.y-p.h/2,r:5,vy:-speed,vx:-1,alive:true});
+      sh.bullets.push({x:p.x+10,y:p.y-p.h/2,r:5,vy:-speed,vx:1,alive:true});
+    }
+  }
+  // move bullets
+  sh.bullets.forEach(b=>{b.y+=b.vy;if(b.vx)b.x+=b.vx;if(b.y<0)b.alive=false;});
+  sh.bullets=sh.bullets.filter(b=>b.alive);
+  // move enemy bullets
+  sh.ebullets.forEach(b=>{b.y+=b.vy;if(b.y>ch)b.alive=false;});
+  sh.ebullets=sh.ebullets.filter(b=>b.alive);
+  // move enemies
+  const eSpeed=sh.activePU.slow?0.3:1;
+  sh.enemies.forEach(e=>{
+    e.phase+=0.02;
+    e.y+=e.vy*eSpeed;
+    e.x+=Math.sin(e.phase)*1.2;
+    if(e.y>ch)e.alive=false;
+    // enemy shoot
+    e.shootTimer--;
+    if(e.shootTimer<=0){
+      e.shootTimer=ri(80,160);
+      sh.ebullets.push({x:e.x,y:e.y+e.h/2,r:4,vy:3+sh.level*0.5,alive:true,enemy:true});
+    }
+  });
+  sh.enemies=sh.enemies.filter(e=>e.alive);
+  // boss logic
+  if(sh.boss&&sh.boss.alive){
+    sh.boss.x+=sh.boss.vx;
+    sh.boss.phase+=0.03;
+    sh.boss.y=80+Math.sin(sh.boss.phase)*20;
+    if(sh.boss.x<sh.boss.w/2||sh.boss.x>cw-sh.boss.w/2)sh.boss.vx*=-1;
+    sh.boss.shootTimer--;
+    if(sh.boss.shootTimer<=0){
+      sh.boss.shootTimer=40;
+      const angles=[-0.3,0,0.3];
+      angles.forEach(a=>{
+        const spd2=4+sh.level*0.3;
+        sh.ebullets.push({x:sh.boss.x,y:sh.boss.y+sh.boss.h/2,r:5,vy:spd2*Math.cos(a),vx:spd2*Math.sin(a),alive:true,enemy:true});
+      });
+    }
+    // bullet hits boss
+    sh.bullets.forEach(b=>{
+      if(!b.alive||!sh.boss.alive)return;
+      const bx=sh.boss,dx=b.x-bx.x,dy=b.y-bx.y;
+      if(Math.abs(dx)<bx.w/2&&Math.abs(dy)<bx.h/2){
+        b.alive=false;
+        const dmg=shCfg.powerups.includes('missile')?3:1;
+        sh.bossHP-=dmg;
+        shParticles(b.x,b.y,'#ff9800',5);
+        document.getElementById('shBossHp').style.width=Math.max(0,sh.bossHP/sh.bossMaxHP*100)+'%';
+        if(sh.bossHP<=0){
+          sh.boss.alive=false;
+          shParticles(bx.x,bx.y,'#FFD700',20);
+          setTimeout(shBossDefeated,500);
+        }
+      }
+    });
+  }
+  // bullet-enemy collisions
+  sh.bullets.forEach(b=>{
+    sh.enemies.forEach(e=>{
+      if(!b.alive||!e.alive)return;
+      const dx=b.x-e.x,dy=b.y-e.y;
+      if(Math.abs(dx)<(b.r+e.w/2)&&Math.abs(dy)<(b.r+e.h/2)){
+        b.alive=false;e.alive=false;sh.score+=10;
+        shParticles(e.x,e.y,'#42A5F5',6);
+        updateShHUD();
+        // chance to drop powerup
+        if(Math.random()<0.1){
+          const pu=POWERUPS[ri(0,POWERUPS.length-1)];
+          sh.powerupItems.push({x:e.x,y:e.y,ico:pu.ico,id:pu.id,vy:2,r:16,alive:true});
+        }
+      }
+    });
+  });
+  sh.bullets=sh.bullets.filter(b=>b.alive);
+  sh.enemies=sh.enemies.filter(e=>e.alive);
+  // powerup items
+  sh.powerupItems.forEach(pu=>{
+    pu.y+=pu.vy;if(pu.y>ch)pu.alive=false;
+    const dx=pu.x-p.x,dy=pu.y-p.y;
+    if(Math.abs(dx)<pu.r+p.w/2&&Math.abs(dy)<pu.r+p.h/2){
+      applyPowerup(pu.id);pu.alive=false;
+    }
+  });
+  sh.powerupItems=sh.powerupItems.filter(pu=>pu.alive);
+  // particles
+  sh.particles.forEach(pt=>{pt.x+=pt.vx;pt.y+=pt.vy;pt.life--;});
+  sh.particles=sh.particles.filter(pt=>pt.life>0);
+  // player hit by enemy bullet
+  if(!sh.activePU.star){
+    sh.ebullets.forEach(b=>{
+      if(!b.alive)return;
+      const dx=b.x-p.x,dy=b.y-p.y;
+      if(Math.abs(dx)<b.r+p.w/2&&Math.abs(dy)<b.r+p.h/2){
+        b.alive=false;
+        if(sh.activePU.shield){sh.activePU.shield=false;shParticles(p.x,p.y,'#42A5F5',8);}
+        else{sh.lives--;shParticles(p.x,p.y,'#ef5350',8);updateShHUD();if(sh.lives<=0){shGameOver();return;}}
+      }
+    });
+  }
+  sh.ebullets=sh.ebullets.filter(b=>b.alive);
+  // enemy reaches bottom or hits player
+  sh.enemies.forEach(e=>{
+    const dx=e.x-p.x,dy=e.y-p.y;
+    if(Math.abs(dx)<e.w/2+p.w/2&&Math.abs(dy)<e.h/2+p.h/2){
+      if(!sh.activePU.star){sh.lives--;e.alive=false;shParticles(p.x,p.y,'#ef5350',10);updateShHUD();if(sh.lives<=0){shGameOver();}}
+    }
+  });
+  // level clear
+  if(sh.enemies.length===0&&!sh.boss&&sh.level<5){
+    shLevelClear();
+  }
+}
+
+function shParticles(x,y,color,n){
+  for(let i=0;i<n;i++){
+    sh.particles.push({x,y,vx:(Math.random()-.5)*4,vy:(Math.random()-.5)*4,r:3,life:20,color});
+  }
+}
+function applyPowerup(id){
+  const pu=POWERUPS.find(p=>p.id===id);
+  if(!pu)return;
+  say(`${pu.ico} ${pu.name}!`,'happy');
+  if(id==='life')sh.lives=Math.min(shCfg.lives+3,sh.lives+1);
+  else if(id==='bomb'){sh.enemies=[];sh.ebullets=[];sh.score+=50;shParticles(sh.ctx.canvas.width/2,sh.ctx.canvas.height/2,'#FFD700',30);}
+  else if(id==='heal')sh.lives=Math.min(shCfg.lives,sh.lives+2);
+  else{sh.activePU[id]=true;setTimeout(()=>{sh.activePU[id]=false;},8000);}
+  updateShHUD();
+}
+function updateShHUD(){
+  document.getElementById('shHudLives').textContent='❤️'.repeat(Math.max(0,sh.lives));
+  document.getElementById('shHudLevel').textContent=`שְׁלָב ${sh.level}${sh.level===5?' 👾 בּוֹס!':''}`;
+  document.getElementById('shHudScore').textContent=`⭐ ${sh.score}`;
+}
+function shLevelClear(){
+  sh.active=false;
+  if(sh.raf){cancelAnimationFrame(sh.raf);sh.raf=null;}
+  if(sh.level>=4){sh.level=5;shShowOverlay('🚀','הִגַּעְתָּ לַבּוֹס!','היזהר! הבוס יורה בחזרה!','הַמְשֵׁךְ לַבּוֹס 👾',true);}
+  else{sh.level++;shShowOverlay('🎉',`שְׁלָב ${sh.level-1} הוּשְׁלַם!`,`עוֹבֵר לְשְׁלָב ${sh.level}!`,'הַמְשֵׁךְ ▶',true);}
+}
+function shBossDefeated(){
+  sh.active=false;
+  if(sh.raf){cancelAnimationFrame(sh.raf);sh.raf=null;}
+  launchFireworks();
+  shShowOverlay('🏆','אַתֶּם אַלּוּפִים הִצְלַחְתֶּם לְנַצֵּחַ!',`ניקוד: ${sh.score}`,'שׁוּב? 🔄',false);
+  say(`וָאוּ ${S.name}! נִצַּחְתָּ אֶת הַבּוֹס! 🏆`,'happy');
+}
+function shGameOver(){
+  sh.active=false;
+  if(sh.raf){cancelAnimationFrame(sh.raf);sh.raf=null;}
+  shShowOverlay('💥','אוֹי! נִגְמְרוּ הַחַיִּים!',`ניקוד: ${sh.score}`,'נְנַסֶּה שׁוּב? 🔄',false);
+}
+function shShowOverlay(emoji,msg,sub,btnTxt,isNext){
+  document.getElementById('shOverlay').style.display='block';
+  document.getElementById('shOverEmoji').textContent=emoji;
+  document.getElementById('shOverMsg').textContent=msg;
+  document.getElementById('shOverSub').textContent=sub;
+  const btn=document.getElementById('shNextBtn');
+  btn.textContent=btnTxt;
+  btn.dataset.isNext=isNext?'1':'0';
+}
+function shooterNextAction(){
+  const isNext=document.getElementById('shNextBtn').dataset.isNext==='1';
+  document.getElementById('shOverlay').style.display='none';
+  if(isNext){
+    sh.active=true;
+    shStartLevel();
+    shLoop();
+  }else{
+    startShooter();
+  }
+}
+
+function shDraw(){
+  const ctx=sh.ctx;const cw=ctx.canvas.width;const ch=ctx.canvas.height;
+  ctx.clearRect(0,0,cw,ch);
+  // background
+  ctx.fillStyle='#060e24';ctx.fillRect(0,0,cw,ch);
+  // stars (static)
+  ctx.fillStyle='rgba(255,255,255,0.4)';
+  for(let i=0;i<40;i++){ctx.fillRect((i*67+sh.score)%cw,(i*113)%ch,1,1);}
+  // particles
+  sh.particles.forEach(pt=>{ctx.fillStyle=pt.color;ctx.beginPath();ctx.arc(pt.x,pt.y,pt.r,0,Math.PI*2);ctx.fill();});
+  // powerup items
+  sh.powerupItems.forEach(pu=>{ctx.font=`${pu.r*2}px serif`;ctx.textAlign='center';ctx.fillText(pu.ico,pu.x,pu.y);});
+  // enemies
+  sh.enemies.forEach(e=>{
+    if(!e.alive)return;
+    ctx.fillStyle='#ef5350';ctx.fillRect(e.x-e.w/2,e.y-e.h/2,e.w,e.h);
+    ctx.font='20px serif';ctx.textAlign='center';ctx.fillText('👾',e.x,e.y+8);
+  });
+  // boss
+  if(sh.boss&&sh.boss.alive){
+    ctx.font='56px serif';ctx.textAlign='center';ctx.fillText('🦑',sh.boss.x,sh.boss.y+sh.boss.h/2);
+  }
+  // enemy bullets
+  sh.ebullets.forEach(b=>{ctx.fillStyle='#ef5350';ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,Math.PI*2);ctx.fill();});
+  // player bullets
+  sh.bullets.forEach(b=>{ctx.fillStyle='#FFD700';ctx.beginPath();ctx.arc(b.x,b.y,b.r,0,Math.PI*2);ctx.fill();});
+  // player
+  const p=sh.player;
+  ctx.font='36px serif';ctx.textAlign='center';ctx.fillText('🚀',p.x,p.y+14);
+  if(sh.activePU.star){ctx.strokeStyle='rgba(255,215,0,0.6)';ctx.lineWidth=3;ctx.beginPath();ctx.arc(p.x,p.y,p.w,0,Math.PI*2);ctx.stroke();}
+  if(sh.activePU.shield){ctx.strokeStyle='rgba(66,165,245,0.7)';ctx.lineWidth=3;ctx.beginPath();ctx.arc(p.x,p.y,p.w*1.2,0,Math.PI*2);ctx.stroke();}
+}
+
+// FIREWORKS
+function launchFireworks(){
+  const emojis=['🎉','⭐','🌟','✨','🎊','🏆'];
+  for(let i=0;i<20;i++){
+    setTimeout(()=>{
+      const el=document.createElement('div');
+      el.className='firework';
+      el.textContent=emojis[ri(0,emojis.length-1)];
+      el.style.left=ri(10,90)+'vw';
+      el.style.top=ri(10,80)+'vh';
+      const fx=(Math.random()-.5)*200;
+      const fy=(Math.random()-.5)*200;
+      el.style.setProperty('--fx',fx+'px');
+      el.style.setProperty('--fy',fy+'px');
+      document.body.appendChild(el);
+      setTimeout(()=>el.remove(),1300);
+    },i*80);
+  }
+}
+
+// BACKGROUND
+function buildBg(){
+  const sf=document.getElementById('starF');
+  for(let i=0;i<80;i++){
+    const d=document.createElement('div');d.className='sd';
+    const sz=ri(1,3);
+    d.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${2+Math.random()*4}s;--o:${.2+Math.random()*.5};animation-delay:${Math.random()*4}s`;
+    sf.appendChild(d);
+  }
+  const sc=document.getElementById('slinesC');
+  for(let i=0;i<14;i++){
+    const l=document.createElement('div');l.className='sl';
+    l.style.cssText=`top:${Math.random()*100}%;width:${60+Math.random()*160}px;animation-duration:${3+Math.random()*5}s;animation-delay:${Math.random()*5}s`;
+    sc.appendChild(l);
+  }
+}
+buildBg();
+buildPUGrid();
+</script>
+</body>
+</html>
