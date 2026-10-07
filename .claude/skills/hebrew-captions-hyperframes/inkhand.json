@@ -1,0 +1,44 @@
+{
+  "name": "inkhand",
+  "voice": "handwritten Hebrew ink on a bright room — no plate, no bar: near-black handwriting sits directly on the frame just below center, lifted off the footage by a cream paper-glow halo instead of a background band. One climax word settles behind the subject with a drawn accent underline. A rail DNA re-tuned for 1080x1920 vertical + RTL.",
+  "when": "bright warm talking-head verticals in Hebrew where every word must read and nothing may cover the footage.",
+  "register": "calm",
+  "fonts": {
+    "body": "OHRonShemer",
+    "hero": "OHRonShemer",
+    "tag": "OHRonShemer"
+  },
+  "palette": {
+    "body": "#16120E",
+    "accent": "#1A46C8",
+    "em": "#1A46C8"
+  },
+  "body": {
+    "paradigm": "rail",
+    "layer": "fg",
+    "fontPx": 96,
+    "bottomPx": 740,
+    "letterSpacing": "0em",
+    "entrance": "fade",
+    "exit": "fade",
+    "minorScale": 1.0,
+    "glow": "0 0 18px rgba(255,252,244,0.95), 0 0 7px rgba(255,252,244,0.98), 0 1px 2px rgba(255,252,244,0.9)",
+    "yield": {
+      "dim": 0.55,
+      "pre": 0.2,
+      "post": 0.9
+    }
+  },
+  "hero": {
+    "setpiece": "settle",
+    "layer": "bg",
+    "fontPx": 190,
+    "params": {}
+  },
+  "plate": {
+    "dim": 0,
+    "pushIn": 0,
+    "grain": 0
+  },
+  "linkages": []
+}
